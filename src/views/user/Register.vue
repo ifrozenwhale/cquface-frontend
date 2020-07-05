@@ -45,6 +45,7 @@
                 <v-form>
                   <v-text-field
                     label="Account"
+                    :filled="false"
                     name="account"
                     prepend-icon="mdi-account"
                     type="text"
@@ -53,6 +54,7 @@
 
                   <v-text-field
                     label="Username"
+                    :filled="false"
                     name="username"
                     prepend-icon="mdi-message-text"
                     type="text"
@@ -62,6 +64,7 @@
                   <v-text-field
                     id="password"
                     label="Password"
+                    :filled="false"
                     name="password"
                     prepend-icon="mdi-lock"
                     type="password"
@@ -70,6 +73,7 @@
 
                   <v-text-field
                     id="email"
+                    :filled="false"
                     label="Email"
                     name="email"
                     prepend-icon="mdi-email"
@@ -79,6 +83,7 @@
 
                   <v-text-field
                     id="major"
+                    :filled="false"
                     label="Major"
                     name="major"
                     prepend-icon="mdi-dialpad"

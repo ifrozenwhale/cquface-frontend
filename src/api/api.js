@@ -35,3 +35,14 @@ export const logout = () => {
 export const checkLogin = () => {
   return axios.get('http://localhost:8000/api/login/status')
 }
+
+// save photo
+export const savePhoto = (base64) => {
+  return axios.post('http://localhost:8000/api/user/photo', {
+    base: base64,
+  })
+}
+
+export const getUserByAccount = (account) => {
+  return axios.get('http://localhost:8000/api/user/account/' + account)
+}
