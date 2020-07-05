@@ -1,62 +1,68 @@
 <template>
   <v-app>
-    <v-container>
-      <div class="camera_outer">
-        <video
-          id="videoCamera"
-          :width="videoWidth"
-          :height="videoHeight"
-          autoplay
-        ></video>
-        <canvas
-          style="display:none;"
-          id="canvasCamera"
-          :width="videoWidth"
-          :height="videoHeight"
-        ></canvas>
+    <v-container class="fill-height" fluid>
+      <v-row justify="space-around" align="center">
+        <v-col md="2"></v-col>
+        <v-col md="4">
+          <v-card>
+            <div class="text-center" margin="0">
+              <video object-fit id="videoCamera" width="100%" height="100%" autoplay></video>
+            </div>
+          </v-card>
+        </v-col>
+        <v-col md="4"
+          ><v-card>
+            <canvas
+              style="display:none"
+              object-fit
+              id="canvasCamera"
+              :width="videoWidth"
+              :height="videoHeight"
+            ></canvas>
+            <div class="text-center">
+              <v-img object-fit width="100%" height="100%" contain :src="imgSrc"></v-img>
+            </div> </v-card
+        ></v-col>
 
-        <div
-          v-if="imgSrc"
-          class="img_bg_camera"
-        >
-          <img
-            :src="imgSrc"
-            alt=""
-            class="tx_img"
-          >
-        </div>
-
-        <button @click="getCompetence()">打开摄像头</button>
-        <button @click="stopNavigator()">关闭摄像头</button>
-        <button @click="setImage()">关闭摄像头</button>
-      </div>
+        <v-col>
+          <v-btn @click="getCompetence()">打开摄像头</v-btn>
+          <v-btn @click="stopNavigator()">关闭摄像头</v-btn>
+          <v-btn @click="setImage()">拍照</v-btn>
+        </v-col>
+      </v-row>
     </v-container>
-
   </v-app>
-
 </template>
-  <script>
+<script>
+import { savePhoto } from '../../api/api.js'
 export default {
   data() {
     return {
-      videoWidth: 3000,
-      videoHeight: 300,
-      imgSrc: "",
+      videoWidth: 600,
+      videoHeight: 600,
+      imgSrc: '',
       thisCancas: null,
       thisContext: null,
-      thisVideo: null
-    };
+      thisVideo: null,
+    }
+  },
+  mounted() {
+    this.initCanvas()
   },
   methods: {
+    initCanvas() {
+      console.log('初始化canvas')
+      this.thisCancas = document.getElementById('canvasCamera')
+      this.thisContext = this.thisCancas.getContext('2d')
+      this.drawSmile()
+    },
     // 调用权限（打开摄像头功能）
     getCompetence() {
-      var _this = this;
-      this.thisCancas = document.getElementById("canvasCamera");
-      this.thisContext = this.thisCancas.getContext("2d");
-      this.thisVideo = document.getElementById("videoCamera");
+      var _this = this
+      this.thisVideo = document.getElementById('videoCamera')
       // 旧版本浏览器可能根本不支持mediaDevices，我们首先设置一个空对象
       if (navigator.mediaDevices === undefined) {
-        navigator.mediaDevices = {};
+        navigator.mediaDevices = {}
       }
       // 一些浏览器实现了部分mediaDevices，我们不能只分配一个对象
       // 使用getUserMedia，因为它会覆盖现有的属性。
@@ -64,92 +70,100 @@ export default {
       if (navigator.mediaDevices.getUserMedia === undefined) {
         navigator.mediaDevices.getUserMedia = function(constraints) {
           // 首先获取现存的getUserMedia(如果存在)
-          var getUserMedia =
-            navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia ||
-            navigator.getUserMedia;
+          var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.getUserMedia
           // 有些浏览器不支持，会返回错误信息
           // 保持接口一致
           if (!getUserMedia) {
-            return Promise.reject(
-              new Error("getUserMedia is not implemented in this browser")
-            );
+            return Promise.reject(new Error('getUserMedia is not implemented in this browser'))
           }
           // 否则，使用Promise将调用包装到旧的navigator.getUserMedia
           return new Promise(function(resolve, reject) {
-            getUserMedia.call(navigator, constraints, resolve, reject);
-          });
-        };
+            getUserMedia.call(navigator, constraints, resolve, reject)
+          })
+        }
       }
       var constraints = {
         audio: false,
         video: {
           width: this.videoWidth,
           height: this.videoHeight,
-          transform: "scaleX(-1)"
-        }
-      };
+          transform: 'scaleX(-1)',
+        },
+      }
       navigator.mediaDevices
         .getUserMedia(constraints)
         .then(function(stream) {
           // 旧的浏览器可能没有srcObject
-          if ("srcObject" in _this.thisVideo) {
-            _this.thisVideo.srcObject = stream;
+          if ('srcObject' in _this.thisVideo) {
+            _this.thisVideo.srcObject = stream
           } else {
             // 避免在新的浏览器中使用它，因为它正在被弃用。
-            _this.thisVideo.src = window.URL.createObjectURL(stream);
+            _this.thisVideo.src = window.URL.createObjectURL(stream)
           }
           _this.thisVideo.onloadedmetadata = function() {
-            _this.thisVideo.play();
-          };
+            _this.thisVideo.play()
+          }
         })
-        .catch(err => {
-          console.log(err);
-        });
+        .catch((err) => {
+          console.log(err)
+        })
     },
     //  绘制图片（拍照功能）
 
     setImage() {
-      var _this = this;
+      var _this = this
       // 点击，canvas画图
-      _this.thisContext.drawImage(
-        _this.thisVideo,
-        0,
-        0,
-        _this.videoWidth,
-        _this.videoHeight
-      );
+      _this.thisContext.drawImage(_this.thisVideo, 0, 0, _this.videoWidth, _this.videoHeight)
       // 获取图片base64链接
-      var image = this.thisCancas.toDataURL("image/png");
-      _this.imgSrc = image;
-      this.$emit("refreshDataList", this.imgSrc);
+      var image = this.thisCancas.toDataURL('../../../img')
+      console.log(image)
+      console.log('set')
+      _this.imgSrc = image
+      // this.drawSmile(_this.thisContext)
+      // TODO
+      savePhoto(image.split(',')[1]).then(() => {
+        alert('succ')
+      })
     },
+
     // base64转文件
 
-    dataURLtoFile(dataurl, filename) {
-      var arr = dataurl.split(",");
-      var mime = arr[0].match(/:(.*?);/)[1];
-      var bstr = atob(arr[1]);
-      var n = bstr.length;
-      var u8arr = new Uint8Array(n);
+    dataURLto(dataurl, filename) {
+      var arr = dataurl.split(',')
+      var mime = arr[0].match(/:(.*?);/)[1]
+      var bstr = atob(arr[1])
+      var n = bstr.length
+      var u8arr = new Uint8Array(n)
       while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
+        u8arr[n] = bstr.charCodeAt(n)
       }
-      return new File([u8arr], filename, { type: mime });
+      return new File([u8arr], filename, { type: mime })
     },
     // 关闭摄像头
 
     stopNavigator() {
-      this.thisVideo.srcObject.getTracks()[0].stop();
-    }
-  }
-};
+      this.thisVideo.srcObject.getTracks()[0].stop()
+    },
+    drawSmile(ctx) {
+      ctx.beginPath()
+      ctx.arc(75, 75, 50, 0, Math.PI * 2, true) // 绘制
+      ctx.moveTo(110, 75)
+      ctx.arc(75, 75, 35, 0, Math.PI, false) // 口(顺时针)
+      ctx.moveTo(65, 65)
+      ctx.arc(60, 65, 5, 0, Math.PI * 2, true) // 左眼
+      ctx.moveTo(95, 65)
+      ctx.arc(90, 65, 5, 0, Math.PI * 2, true) // 右眼
+      ctx.stroke()
+      console.log(ctx)
+    },
+  },
+}
 </script>
-  <style lang="scss" scoped>
+<style lang="scss" scoped>
 .camera_outer {
   position: relative;
   overflow: hidden;
-  background: url("../../assets/logo.png") no-repeat center;
+
   background-size: 100%;
   video,
   canvas,

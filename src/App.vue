@@ -143,11 +143,42 @@
 
       <v-btn
         icon
-        @click="test"
+        @click="star()"
       >
         <v-icon large>mdi-heart </v-icon>
       </v-btn>
+      <v-dialog
+        v-model="starDialog"
+        max-width="290"
+      >
+        <v-card>
+          <v-card-title class="headline text-center">
+            欢迎给我们Star！
+          </v-card-title>
 
+          <v-card-text>
+            将跳转到我们的Github仓库哦
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              color="light-blue darken-3"
+              class="red-text"
+              @click="starDialog = false"
+            >
+              <span class="white--text text--lighten-2"> 取消</span> </v-btn>
+            <v-btn
+              color="light-blue darken-4"
+              @click="starConfirm()"
+            >
+              <span class="white--text text--lighten-2">确认</span>
+
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-btn
         icon
         large
@@ -198,6 +229,7 @@ export default {
     login: false,
     dialog: false,
     drawer: true,
+    starDialog: false,
     ok: false,
     items: [
       { icon: "mdi-contacts", text: "Contacts" },
@@ -246,12 +278,17 @@ export default {
     });
   },
   methods: {
-    test() {
+    star() {
       this.ok = ~this.ok;
-      console.log(this.ok);
+      this.starDialog = true;
     },
     logout() {
       this.dialog = true;
+    },
+    starConfirm() {
+      this.starDialog = false;
+      const h = "https://github.com/FrozenWhalePP/cquface";
+      window.open(h);
     },
     logoutConfirm() {
       logout().then(res => {

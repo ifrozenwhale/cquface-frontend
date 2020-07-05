@@ -23,7 +23,7 @@
                 dark
                 flat
               >
-                <v-toolbar-title>Welcome to CQU</v-toolbar-title>
+                <v-toolbar-title>Welcome to CQU Face</v-toolbar-title>
 
                 <v-spacer></v-spacer>
 
@@ -49,6 +49,7 @@
                   <v-text-field
                     label="Account"
                     name="account"
+                    :filled="false"
                     prepend-icon="mdi-account"
                     type="text"
                     v-model="inputUsers.account"
@@ -58,6 +59,7 @@
                     id="password"
                     label="Password"
                     name="password"
+                    :filled="false"
                     prepend-icon="mdi-lock"
                     type="password"
                     v-model="inputUsers.password"
@@ -80,6 +82,31 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-dialog
+          v-model="dialog"
+          max-width="290"
+        >
+          <v-card>
+            <v-card-title class="headline text-center">
+              {{errorMsg}}
+            </v-card-title>
+
+            <v-card-text>
+              {{errorTip}}
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                color="light-blue darken-4"
+                @click="closeDialog"
+              >
+                <span class="white--text text--lighten-2">确认</span>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-container>
     </v-main>
   </v-app>
@@ -93,6 +120,8 @@ export default {
     return {
       ok: false,
       errorMsg: "",
+      dialog: false,
+      errorTip: "",
       users: [],
       inputUsers: {
         account: "",
@@ -117,18 +146,29 @@ export default {
             // set cookie
             this.$router.push("/home");
           } else if (response.data.status == 401) {
-            alert(response.data.msg);
+            this.dialog = true;
+            this.errorMsg = response.data.msg;
+            this.errorTip = "请重新输入账号";
+            // alert(response.data.msg);
           } else if (response.data.status == 402) {
-            alert(response.data.msg);
+            this.errorMsg = response.data.msg;
+            this.errorTip = "请重新输入密码";
+            this.dialog = true;
           } else {
-            alert("Error");
+            this.errorMsg = "未知错误";
+            this.errorTip = "请确保连接正常";
+            this.dialog = true;
           }
         }
       );
     },
+
     userRegister() {
       console.log("register");
       this.$router.push("/register");
+    },
+    closeDialog() {
+      this.dialog = false;
     },
     welcome() {
       alert("welcome");
@@ -141,3 +181,4 @@ export default {
 </script>
 
 <style lang="stylus"></style>
+
