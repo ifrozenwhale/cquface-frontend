@@ -13,6 +13,7 @@
     "file-saver": "^2.0.2",
     "vue": "^2.6.11",
     "vue-router": "^3.3.4",
+    "vuelidate": "^0.7.5",
     "vuetify": "^2.2.11"
   },
   "devDependencies": {

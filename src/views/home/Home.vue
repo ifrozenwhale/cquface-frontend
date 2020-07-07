@@ -135,14 +135,6 @@
                       >
                         <v-icon>{{item.icon}}</v-icon>
                       </v-avatar>
-                      <!-- <v-avatar
-                        left
-                        v-if="item.name == '是否戴眼镜'"
-                      > -->
-                      <!-- <v-icon v-if="item.type == '是'">mdi-checkbox-marked-circle</v-icon>
-                        <v-icon v-if="item.type == '否'">mdi-close</v-icon> -->
-
-                      <!-- </v-avatar> -->
                       {{item.type}}
                     </v-chip>
                   </v-list-item>
@@ -158,6 +150,13 @@
                 v-if="!finish"
                 @click="start()"
               >开始分析</v-btn>
+              <v-btn
+                dark
+                color="blue-grey darken-2"
+                width="15%"
+                v-if="finish"
+                @click="voiceReport()"
+              >语音播报</v-btn>
               <v-btn
                 dark
                 color="blue-grey lighten-2"
@@ -219,7 +218,7 @@
 </template>
 <script>
 import { savePhoto, getReport, share } from "../../api/api.js";
-
+import { voicePrompt } from "../../api/voice.js";
 export default {
   data() {
     return {
@@ -280,6 +279,17 @@ export default {
           "https://frozenwhale.oss-cn-beijing.aliyuncs.com/img/man.png";
       }
     },
+
+    toString() {
+      var str = "现在为您语音播报。";
+      this.items.forEach(e => {
+        str = str + e.name + "," + e.type + "。";
+      });
+      return str;
+    },
+    voiceReport() {
+      voicePrompt(this.toString());
+    },
     start() {
       // let type = this.fileMode ? "FILE" : "BASE64";
       getReport(this.file).then(res => {
@@ -294,6 +304,7 @@ export default {
       this.finish = false;
       this.items.forEach(element => {
         element.type = "";
+        element.icon = "";
       });
     },
     publicShare() {

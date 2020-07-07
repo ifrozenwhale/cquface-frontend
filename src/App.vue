@@ -1,5 +1,6 @@
 <template>
   <v-app>
+
     <v-navigation-drawer
       v-model="drawer"
       :clipped="$vuetify.breakpoint.lgAndUp"
@@ -157,8 +158,8 @@
       <!-- footer -->
       <v-card height="150">
         <v-footer
-          absolute
           class="font-weight-medium"
+          absolute
         >
           <v-col
             class="text-center"
@@ -171,6 +172,7 @@
     </div>
 
     <BackTop></BackTop>
+
   </v-app>
 </template>
 
