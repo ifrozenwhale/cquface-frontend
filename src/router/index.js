@@ -1,6 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { Login, Register, Home, UserInfo, Welcome, test } from '../views'
+import {
+  Login,
+  Register,
+  Home,
+  UserInfo,
+  Welcome,
+  Discover,
+  Stars,
+  Report,
+} from '../views'
+// import Login from '@/components/Login'
+// import Register from '@/components/Register'
 
 Vue.use(Router)
 
@@ -38,9 +49,19 @@ export default new Router({
       component: Welcome,
     },
     {
-      path: '/test',
-      name: 'Test',
-      component: test,
+      path: '/discover',
+      name: 'Discover',
+      component: Discover,
+    },
+    {
+      path: '/stars',
+      name: 'Stars',
+      component: Stars,
+    },
+    {
+      path: '/report',
+      name: 'Report',
+      component: Report,
     },
   ],
 })

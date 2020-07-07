@@ -10,12 +10,19 @@ export const getTestById = (id) => {
   return axios.get('http://localhost:8000/api/test/id/' + id)
 }
 export const postTest = (id, name, major) => {
-  return axios.post(`http://localhost:8000/api/test`, { id: id, name: name, major: major })
+  return axios.post(`http://localhost:8000/api/test`, {
+    id: id,
+    name: name,
+    major: major,
+  })
 }
 
 // login
 export const login = (account, password) => {
-  return axios.post('http://localhost:8000/api/login', { account: account, password: password })
+  return axios.post('http://localhost:8000/api/login', {
+    account: account,
+    password: password,
+  })
 }
 
 // register
@@ -45,21 +52,4 @@ export const savePhoto = (base64) => {
 
 export const getUserByAccount = (account) => {
   return axios.get('http://localhost:8000/api/user/account/' + account)
-}
-
-// start analysis
-export const getReport = (image) => {
-  return axios.post('http://localhost:8000/api/photo/', {
-    image: image,
-  })
-}
-
-// share
-export const share = (userId, photoId, publicShare, content) => {
-  return axios.post('http://localhost:8000/api/photo/share', {
-    userId: userId,
-    photoId: photoId,
-    public: publicShare,
-    content: content,
-  })
 }
