@@ -146,7 +146,7 @@
       </v-btn>
     </v-app-bar>
 
-    <div class="content-app">
+    <v-content class="mx-4 mb-4">
       <transition
         name="fadeInUp"
         mode="out-in"
@@ -168,7 +168,7 @@
           </v-col>
         </v-footer>
       </v-card>
-    </div>
+    </v-content>
 
     <BackTop></BackTop>
   </v-app>
