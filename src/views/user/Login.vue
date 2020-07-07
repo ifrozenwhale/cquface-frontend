@@ -88,11 +88,11 @@
         >
           <v-card>
             <v-card-title class="headline text-center">
-              {{errorMsg}}
+              {{ errorMsg }}
             </v-card-title>
 
             <v-card-text>
-              {{errorTip}}
+              {{ errorTip }}
             </v-card-text>
 
             <v-card-actions>
@@ -143,7 +143,16 @@ export default {
         response => {
           if (response.data.status == 200) {
             Event.$emit("welcome", true);
-            // set cookie
+            // 本地存储userId
+            localStorage.setItem("userId", this.account);
+            // 如果没有登录，跳转回被拦截的页面
+            if (self.$route.query.redirect) {
+              //如果存在参数
+              let redirect = self.$route.query.redirect;
+              self.$router.push(redirect); //则跳转至进入登录页前的路由
+            } else {
+              self.$router.push("/index"); //否则跳转至首页
+            }
             this.$router.push("/home");
           } else if (response.data.status == 401) {
             this.dialog = true;
@@ -181,4 +190,3 @@ export default {
 </script>
 
 <style lang="stylus"></style>
-

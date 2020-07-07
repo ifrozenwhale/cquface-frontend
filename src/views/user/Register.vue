@@ -22,71 +22,78 @@
               </v-toolbar>
 
               <v-card-text>
-                <v-form>
-                  <v-text-field
-                    label="Account"
-                    :filled="false"
-                    name="account"
-                    required
-                    prepend-icon="mdi-account"
-                    type="text"
-                    v-model="inputUsers.account"
-                  ></v-text-field>
-
-                  <v-text-field
-                    label="Username"
-                    :filled="false"
-                    name="username"
-                    required
-                    prepend-icon="mdi-message-text"
-                    type="text"
-                    v-model="inputUsers.username"
-                  ></v-text-field>
-
-                  <v-text-field
-                    id="password"
-                    label="Password"
-                    required
-                    :filled="false"
-                    name="password"
-                    prepend-icon="mdi-lock"
-                    type="password"
-                    v-model="inputUsers.password"
-                  ></v-text-field>
-                  <v-text-field
-                    id="password"
-                    required
-                    label="Confirm password"
-                    :filled="false"
-                    name="password"
-                    prepend-icon="mdi-lock"
-                    type="password"
-                    :error="passwordError"
-                    @change="confirmPassword()"
-                    v-model="inputUsers.passwordTwo"
-                  ></v-text-field>
-
-                  <v-text-field
-                    id="email"
-                    :filled="false"
-                    label="Email"
-                    required
-                    name="email"
-                    prepend-icon="mdi-email"
-                    type="email"
-                    v-model="inputUsers.email"
-                  ></v-text-field>
-
-                  <v-text-field
-                    id="major"
-                    :filled="false"
-                    required
-                    label="Major"
-                    name="major"
-                    prepend-icon="mdi-dialpad"
-                    v-model="inputUsers.major"
-                  ></v-text-field>
-                </v-form>
+                <ValidationObserver ref="observer">
+                  <v-form>
+                    <validationProvider v-slot="{ errors }" name="账号" rules="required|account">
+                      <v-text-field
+                        label="Account"
+                        :filled="false"
+                        name="account"
+                        :error-messages="errors"
+                        required
+                        prepend-icon="mdi-account"
+                        type="text"
+                        v-model="inputUsers.account"
+                      ></v-text-field>
+                    </validationProvider>
+                    <ValidationProvider v-slot="{ errors }" name="用户名" rules="required|min:2|max:20">
+                      <v-text-field
+                        label="Username"
+                        :filled="false"
+                        :error-messages="errors"
+                        name="username"
+                        prepend-icon="mdi-message-text"
+                        type="text"
+                        v-model="inputUsers.username"
+                      ></v-text-field>
+                    </ValidationProvider>
+                    <validationProvider v-slot="{ errors }" name="密码" rules="required|min:6|max:15|password">
+                      <v-text-field
+                        id="password"
+                        label="Password"
+                        :filled="false"
+                        name="password"
+                        :error-messages="errors"
+                        prepend-icon="mdi-lock"
+                        type="text"
+                        v-model="inputUsers.password"
+                      ></v-text-field>
+                    </validationProvider>
+                    <v-text-field
+                      id="password"
+                      required
+                      label="Confirm password"
+                      :filled="false"
+                      :error="passwordError"
+                      name="password"
+                      prepend-icon="mdi-lock"
+                      type="password"
+                      @change="confirmPassword()"
+                      v-model="inputUsers.passwordTwo"
+                    ></v-text-field>
+                    <validationProvider v-slot="{ errors }" name="Email" rules="required|email">
+                      <v-text-field
+                        id="email"
+                        :filled="filled"
+                        label="Email"
+                        :error-messages="errors"
+                        name="email"
+                        prepend-icon="mdi-email"
+                        type="email"
+                        v-model="inputUsers.email"
+                      ></v-text-field>
+                    </validationProvider>
+                    <v-text-field
+                      id="major"
+                      :filled="false"
+                      required
+                      label="Major"
+                      name="major"
+                      prepend-icon="mdi-dialpad"
+                      v-model="inputUsers.major"
+                    ></v-text-field>
+                  </v-form>
+                </ValidationObserver>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -103,24 +110,53 @@
 
 <script>
 import { register } from '../../api/api'
-import { validationMixin } from 'vuelidate'
-import { required, maxLength, email } from 'vuelidate/lib/validators'
-export default {
-  validations: {
-    name: { required, maxLength: maxLength(10) },
-    email: { required, email },
-    select: { required },
-    checkbox: {
-      checked(val) {
-        return val
-      },
-    },
+import { required, email, max, min } from 'vee-validate/dist/rules'
+import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+
+setInteractionMode('eager')
+extend('required', {
+  ...required,
+  message: '{_field_} 不能为空',
+})
+extend('min', {
+  ...min,
+  message: '{_field_} 必须长度大于 {length}',
+})
+extend('max', {
+  ...max,
+  message: '{_field_} 必须长度小于 {length} ',
+})
+
+extend('email', {
+  ...email,
+  message: '邮箱格式必须合法',
+})
+
+extend('account', {
+  validate: (value) => {
+    var reg = /^[0-9]{8}$/ /*定义验证表达式*/
+    return reg.test(value) /*进行验证*/
   },
-  mixins: [validationMixin],
+  message: '账号必须是8位数字',
+})
+
+extend('password', {
+  validate: (value) => {
+    // 必须包含至少一位数字和字母
+    var reg = /^(?![^a-zA-Z]+$)(?!\D+$)/
+    return reg.test(value)
+  },
+  message: '密码必须包含至少一位数字和字母',
+})
+export default {
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
   data() {
     return {
       ok: false,
-
+      filled: false,
       passwordError: '',
       users: [],
       inputUsers: {
@@ -143,6 +179,7 @@ export default {
       }
     },
     userRegister() {
+      this.$refs.observer.validate()
       register(
         this.inputUsers.account,
         this.inputUsers.username,
@@ -161,22 +198,7 @@ export default {
   props: {
     source: String,
   },
-  computed: {
-    nameErrors() {
-      const errors = []
-      if (!this.$v.name.$dirty) return errors
-      !this.$v.name.maxLength && errors.push('Name must be at most 10 characters long')
-      !this.$v.name.required && errors.push('Name is required.')
-      return errors
-    },
-    emailErrors() {
-      const errors = []
-      if (!this.$v.email.$dirty) return errors
-      !this.$v.email.email && errors.push('Must be valid e-mail')
-      !this.$v.email.required && errors.push('E-mail is required')
-      return errors
-    },
-  },
+  computed: {},
 }
 </script>
 

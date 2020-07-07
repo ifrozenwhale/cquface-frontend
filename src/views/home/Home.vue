@@ -4,13 +4,22 @@
       class="fill-height"
       fluid
     >
+
       <v-row
         justify="space-around"
         align="center"
       >
-        <v-col md="2"></v-col>
-        <v-col md="3">
-          <v-card>
+        <v-col sm="12"></v-col>
+        <v-col sm="12"></v-col>
+        <v-col sm="12"></v-col>
+        <v-col sm="2"></v-col>
+        <v-col
+          sm="3"
+          xs="10"
+          md="4"
+          lg="3"
+        >
+          <v-card contain>
             <div
               class="text-center align-center justify-center"
               margin="0"
@@ -42,65 +51,76 @@
                   :width="videoWidth"
                   :height="videoHeight"
                 ></canvas>
-
               </v-card-text>
-
             </div>
             <v-card-actions
               d-flex
               justify="center"
             >
-              <v-row rows="3">
-                <v-col
-                  cols="12"
-                  md="6"
-                >
-                  <v-file-input
-                    accept="image/*"
-                    color="light-blue darken-3"
-                    v-model="file"
-                    small-chips
-                    dense
-                    solo
-                    prepend-icon="mdi-image"
-                    label="File input"
-                    @change="fileChange()"
-                  ></v-file-input>
-                </v-col>
-
-                <v-col
-                  md="2"
-                  offset="1"
-                >
-                  <!-- </v-btn> -->
-                  <v-btn
-                    dark
-                    :disabled="fileMode"
-                    color="light-blue darken-3"
-                    @click="videoClick()"
-                  >{{videoInfo}}</v-btn>
-                </v-col>
-                <v-col
-                  md="2"
-                  offset="1"
-                >
-
-                  <!-- </v-btn> -->
-                  <v-btn
-                    dark
-                    :disabled="fileMode"
-                    color="light-blue darken-3"
-                    @click="imageClick()"
-                  >{{imageInfo}}</v-btn>
-
-                </v-col>
-              </v-row>
+              <v-container
+                grid-list-xs
+                fluid
+              >
+                <v-row wrap>
+                  <v-col
+                    sm="11"
+                    xl="6"
+                  >
+                    <v-file-input
+                      accept="image/*"
+                      color="light-blue darken-3"
+                      v-model="file"
+                      small-chips
+                      dense
+                      solo
+                      prepend-icon="mdi-image"
+                      label="File input"
+                      @change="fileChange()"
+                    ></v-file-input>
+                  </v-col>
+                  <!--  -->
+                  <v-col
+                    sm="5"
+                    xs="5"
+                    lg="5"
+                    xl="2"
+                    offset-sm="1"
+                  >
+                    <!-- </v-btn> -->
+                    <v-btn
+                      dark
+                      :disabled="fileMode"
+                      color="light-blue darken-3"
+                      @click="videoClick()"
+                    >{{
+                      videoInfo
+                    }}</v-btn>
+                  </v-col>
+                  <v-col
+                    sm="4"
+                    md="3"
+                    lg="2"
+                    xs="7"
+                    offset-xs="2"
+                    offset-lg="1"
+                  >
+                    <!-- </v-btn> -->
+                    <v-btn
+                      dark
+                      :disabled="fileMode"
+                      color="light-blue darken-3"
+                      @click="imageClick()"
+                    >{{
+                      imageInfo
+                    }}</v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
 
               <!-- <v-btn
                 dark
                 color="light-blue darken-3"
               > -->
-
             </v-card-actions>
           </v-card>
         </v-col>
@@ -122,7 +142,7 @@
                     v-for="(item, i) in items"
                     :key="i"
                   >
-                    <p class="text-h6">{{item.name}}</p>
+                    <p class="text-h6">{{ item.name }}</p>
                     <v-spacer></v-spacer>
                     <v-chip
                       class="ma-2"
@@ -133,16 +153,15 @@
                         left
                         v-if="item.icon"
                       >
-                        <v-icon>{{item.icon}}</v-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
                       </v-avatar>
-                      {{item.type}}
+                      {{ item.type }}
                     </v-chip>
                   </v-list-item>
                 </v-list-item-group>
               </v-list>
             </v-card-text>
             <v-card-actions class="justify-center">
-
               <v-btn
                 dark
                 color="light-blue darken-3"
@@ -173,7 +192,6 @@
               >分享</v-btn>
             </v-card-actions>
           </v-card>
-
         </v-col>
       </v-row>
     </v-container>
@@ -187,7 +205,7 @@
         </v-card-title>
 
         <v-card-text>
-          <br>
+          <br />
           <!-- add content -->
           <v-textarea
             v-model="content"
@@ -204,7 +222,8 @@
             class="red-text"
             @click="privateShare()"
           >
-            <span class="white--text text--lighten-2"> 私密分享</span> </v-btn>
+            <span class="white--text text--lighten-2"> 私密分享</span>
+          </v-btn>
           <v-btn
             color="light-blue darken-4"
             @click="publicShare()"
@@ -281,7 +300,7 @@ export default {
     },
 
     toString() {
-      var str = "现在为您语音播报。";
+      var str = "您真是太可爱啦，现在为您语音播报。";
       this.items.forEach(e => {
         str = str + e.name + "," + e.type + "。";
       });
@@ -444,4 +463,3 @@ export default {
   }
 };
 </script>
-
