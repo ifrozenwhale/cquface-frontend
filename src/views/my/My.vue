@@ -10,7 +10,7 @@
 
 					<v-col md="2">
 							
-						<FanFollowCollect></FanFollowCollect>>
+						<FanFollowCollect></FanFollowCollect>
 					
 					</v-col> 
 					

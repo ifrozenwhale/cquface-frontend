@@ -4,6 +4,7 @@
         <v-card>
         
           <v-list two-line>
+
             <v-list-item 
               v-for="fan in fans"
               :key="fan.nickname"
@@ -51,6 +52,7 @@ export default {
   methods: {
     gotoOthersMy() {
       // 点击卡片，就会跳转到别人的主页去
+      this.$router.push("/othersmy");
 
     }
   }

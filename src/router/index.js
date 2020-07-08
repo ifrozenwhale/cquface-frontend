@@ -8,6 +8,7 @@ import {
   Welcome,
   test,
   My,
+  OthersMy,
   BasicInfo,
   Fans,
   Follows,
@@ -60,6 +61,11 @@ export default new Router({
       component: My,
     },
     {
+      path: '/othersmy',
+      name: 'OthersMy',
+      component: OthersMy,
+    },
+    {
       path: '/basicInfo',
       name: 'BasicInfo',
       component: BasicInfo,
@@ -79,5 +85,6 @@ export default new Router({
       name: 'Collects',
       component: Collects,
     },
+    
   ],
 })

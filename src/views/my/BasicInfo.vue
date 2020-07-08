@@ -6,39 +6,72 @@
     >
 
       <v-row justify="center">
-        <v-col md="4">
+        <v-col md="5">
+          
           <!-- 头像卡 -->
           <v-card
             :color="color"
             dark
             align="center" justify="center"
           >
-
+            <!-- 头像 -->
             <v-avatar
               class="ma-3"
               size="85%"
               tile
             >
-              <v-img :src="avatar"></v-img>
+              <v-img :src="imgSrc"></v-img>
             </v-avatar>
 
-            <v-btn text color="white grey--text" @click="changePortrait()">
-              click to change
-            </v-btn>
+            <!-- 修改头像 -->
+            <v-row align="center" justify="center">
+              <v-col md="auto">
+                <v-file-input
+                  accept="image/*"
+                  v-model="file"
+                  small-chips
+                  dense
+                  solo
+                  flat
+                  background-color="#1F7087"
+                  prepend-icon="mdi-image"
+                  placeholder="click to change"
+                  @change="changePortrait()"
+                ></v-file-input>
+              </v-col>
+            </v-row>
 
           </v-card>
 
+          <v-row></v-row>
+
+        <!-- 修改与提交的按钮 -->
+          <v-row justify="center">
+              <v-btn text class="grey--text" @click="change=!change">
+                <template v-if="change==false">
+                  change my information
+                </template>
+                <template v-else>
+                  submit my information
+                </template>
+                
+              </v-btn>
+          </v-row>
         </v-col>
+
+        
 
         <!-- 资料栏 -->
         <v-col
           md=6
           offset-md="1"
         >
-          
-          <MyInfo></MyInfo>
-          <ChangeMyInfo></ChangeMyInfo>
-          
+          <template v-if="change==false">
+            <MyInfo></MyInfo>
+          </template>
+          <template v-else>
+            <ChangeMyInfo></ChangeMyInfo>
+          </template>
         </v-col>
 
       </v-row>
@@ -55,41 +88,29 @@ export default {
   name: "BasicInfo",
   components: {MyInfo, ChangeMyInfo},
   data: () => ({
-    valid: true,
+    change: false,
     color: "#1F7087",
-    title: "点击修改您的头像",
-    avatar: "https://cdn.vuetifyjs.com/images/cards/foster.jpg",
-    description:
-      "因为有一朵我们看不到的花儿，星星才显得如此美丽，沙漠美丽。因为，沙漠某处隐藏着一口井。",
-    name: "",
+    imgSrc: "https://frozenwhale.oss-cn-beijing.aliyuncs.com/img/man.png",
+    
     account: "20184376",
-    nameRules: [
-      v => !!v || "Name is required",
-      v => (v && v.length <= 10) || "Name must be less than 10 characters"
-    ],
-    email: "",
-    emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
-    ],
-    select: null,
-    items: ["Item 1", "Item 2", "Item 3", "Item 4"],
-    checkbox: false,
-    lazy: false
   }),
 
   methods: {
-    validate() {
-      this.$refs.form.validate();
-    },
-    reset() {
-      this.$refs.form.reset();
-    },
-    resetValidation() {
-      this.$refs.form.resetValidation();
-    },
     changePortrait() {
-
+      var reader = new FileReader(); //读取文件
+      let that = this;
+      if (this.file != null) {
+        this.fileMode = true;
+        reader.readAsDataURL(this.file);
+        reader.onload = function() {
+          that.imgSrc = reader.result;
+          console.log(that.imgSrc);
+        };
+      } else {
+        this.fileMode = false;
+        this.imgSrc =
+          "https://frozenwhale.oss-cn-beijing.aliyuncs.com/img/man.png";
+      }
     },
   }
 };
