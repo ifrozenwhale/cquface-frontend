@@ -6,20 +6,25 @@
     >
 
       <v-row
-        justify="space-around"
+        justify="center"
         align="center"
       >
         <v-col sm="12"></v-col>
         <v-col sm="12"></v-col>
         <v-col sm="12"></v-col>
-        <v-col sm="2"></v-col>
+        <v-col md="2"></v-col>
         <v-col
-          sm="3"
-          xs="10"
+          sm="12"
+          xs="12"
           md="4"
           lg="3"
         >
-          <v-card contain>
+
+          <v-card
+            contain
+            max-width="85%"
+            flex-wrap
+          >
             <div
               class="text-center align-center justify-center"
               margin="0"
@@ -36,6 +41,7 @@
                   autoplay
                   v-show="videoOpen"
                 ></video>
+
                 <v-img
                   object-fit
                   width="100%"
@@ -74,7 +80,7 @@
                       dense
                       solo
                       prepend-icon="mdi-image"
-                      label="File input"
+                      placeholder="File input"
                       @change="fileChange()"
                     ></v-file-input>
                   </v-col>
@@ -123,10 +129,12 @@
               > -->
             </v-card-actions>
           </v-card>
+
         </v-col>
         <v-col
           mx:auto
-          offset="1"
+          offset-xs="3"
+          offset-md="1"
         >
           <v-card
             mx:auto
@@ -152,8 +160,9 @@
                       <v-avatar
                         left
                         v-if="item.icon"
+                       :color="item.color"
                       >
-                        <v-icon>{{ item.icon }}</v-icon>
+                        <v-icon >{{ item.icon }}</v-icon>
                       </v-avatar>
                       {{ item.type }}
                     </v-chip>
@@ -236,8 +245,10 @@
   </v-app>
 </template>
 <script>
-import { savePhoto, getReport, share } from "../../api/api.js";
+import { getReport, share } from "../../api/api.js";
 import { voicePrompt } from "../../api/voice.js";
+import { trans } from "../../api/faceTranslate.js";
+
 export default {
   data() {
     return {
@@ -264,12 +275,16 @@ export default {
         { name: "颜值评分", type: 90 },
         { name: "性别", type: "男", probability: 0.9 },
         { name: "是否戴眼镜", type: "否", probability: 0.9 },
-        { name: "情绪", type: "开心", probability: 0.9, icon: "mdi-close" },
+        {
+          name: "情绪",
+          type: "开心",
+          probability: 0.9
+        },
         { name: "表情", type: "大笑", probability: 0.9 },
         { name: "人种", type: "黄种人", probability: 0.9 },
-        { name: "脸型", type: "圆脸", probability: 0.9 },
-        { name: "脸长", type: "23.4", probability: 0.9 },
-        { name: "脸宽", type: "21", probability: 0.9 }
+        { name: "脸型", type: "圆脸", probability: 0.9 }
+        // { name: "脸长", type: "23.4", probability: 0.9 },
+        // { name: "脸宽", type: "21", probability: 0.9 }
       ]
     };
   },
@@ -311,10 +326,22 @@ export default {
     },
     start() {
       // let type = this.fileMode ? "FILE" : "BASE64";
-      getReport(this.file).then(res => {
-        // this.result = res.data;
-        // TODO
-        console.log(res.data);
+      let account = localStorage.getItem("userId");
+      // { name: "年龄", type: 19 },
+      // { name: "颜值评分", type: 90 },
+      // { name: "性别", type: "男", probability: 0.9 },
+      // { name: "是否戴眼镜", type: "否", probability: 0.9 },
+      // { name: "情绪", type: "开心", probability: 0.9, icon: "mdi-close" },
+      // { name: "表情", type: "大笑", probability: 0.9 },
+      // { name: "人种", type: "黄种人", probability: 0.9 },
+      // { name: "脸型", type: "圆脸", probability: 0.9 },
+      // { name: "脸长", type: "23.4", probability: 0.9 },
+      // { name: "脸宽", type: "21", probability: 0.9 }
+      let base = this.imgSrc.split(",")[1];
+      console.log(base);
+      getReport(base, account).then(res => {
+        trans(this.items, res.data)
+        this.photoId = res.data.photo_id
       });
       // get report
       this.finish = true;
@@ -327,12 +354,17 @@ export default {
       });
     },
     publicShare() {
-      var userId = localStorage.getItem("userId");
-      share(userId, this.photoId, true, this.content).then(res => {
+      share(this.photoId, true, this.content).then(res => {
         console.log(res.data);
       });
+      this.dialog = false;
     },
-    privateShare() {},
+    privateShare() {
+      share(this.photoId, false, this.content).then(res => {
+        console.log(res.data);
+      });
+      this.dialog = false;
+    },
     videoClick() {
       if (this.videoOpen) {
         this.stopNavigator();
@@ -436,8 +468,7 @@ export default {
       // console.log(image);
       _this.imgSrc = image;
 
-      // TODO
-      savePhoto(image.split(",")[1]).then(() => {});
+      // savePhoto(image.split(",")[1]).then(() => {});
     },
 
     // base64转文件

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+
 import Router from 'vue-router'
 import NotFound from '../components/404'
 import { Login, Register, Home, UserInfo, Welcome, test } from '../views'
@@ -51,7 +52,6 @@ const router = new Router({
     },
     {
       path: '*',
-      name: 'NotFound',
       component: NotFound,
     },
   ],
@@ -60,8 +60,9 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requireAuth)) {
     // 判断该路由是否需要登录权限
-    if (localStorage.userId) {
+    if (localStorage.getItem('userId')) {
       // 判断当前的user_id是否存在 ； 登录存入的user_id
+      console.log(localStorage.getItem('userId'))
       next()
     } else {
       next({

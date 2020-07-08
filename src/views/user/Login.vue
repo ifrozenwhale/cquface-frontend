@@ -144,14 +144,14 @@ export default {
           if (response.data.status == 200) {
             Event.$emit("welcome", true);
             // 本地存储userId
-            localStorage.setItem("userId", this.account);
+            localStorage.setItem("userId", this.inputUsers.account);
             // 如果没有登录，跳转回被拦截的页面
-            if (self.$route.query.redirect) {
+            if (this.$route.query.redirect) {
               //如果存在参数
-              let redirect = self.$route.query.redirect;
-              self.$router.push(redirect); //则跳转至进入登录页前的路由
+              let redirect = this.$route.query.redirect;
+              this.$router.push(redirect); //则跳转至进入登录页前的路由
             } else {
-              self.$router.push("/index"); //否则跳转至首页
+              this.$router.push("/index"); //否则跳转至首页
             }
             this.$router.push("/home");
           } else if (response.data.status == 401) {

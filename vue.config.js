@@ -28,6 +28,13 @@ module.exports = {
       // 提取出来的通用 chunk 和 vendor chunk。
       chunks: ['chunk-vendors', 'chunk-common', 'welcome'],
     },
+    error: {
+      entry: './src/error.js',
+      template: 'public/error.html',
+      filename: 'error.html',
+      title: '404 error',
+      chunks: ['chunk-vendors', 'chunk-common', 'error'],
+    },
     // 当使用只有入口的字符串格式时，
     // 模板会被推导为 `public/subpage.html`
     // 并且如果找不到的话，就回退到 `public/index.html`。

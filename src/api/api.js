@@ -3,7 +3,7 @@ import axiosInstance from './index'
 // 使用封装了ajax请求方式的axios进行API调用
 const axios = axiosInstance
 
-export { login, register, logout }
+export { login, register, logout, share}
 
 export const getTests = () => {
   return axios.get(`http://localhost:8000/api/test/`)
@@ -30,6 +30,7 @@ const login = (account, password) => {
 // register
 /**
  * 用户注册
+ *
  * POST
  * @param {string} account 账号
  * @param {string} username 用户名
@@ -39,7 +40,7 @@ const login = (account, password) => {
  * @returns 注册请求状态
  */
 const register = (account, username, password, email, major) => {
-  return axios.post('http://localhost:8000/api/user', {
+  return axios.post('http://localhost:8000/api/add_user', {
     account: account,
     username: username,
     password: password,
@@ -47,6 +48,7 @@ const register = (account, username, password, email, major) => {
     major: major,
   })
 }
+// ok
 
 /**
  * 退出登录
@@ -56,6 +58,27 @@ const register = (account, username, password, email, major) => {
 const logout = () => {
   return axios.get('http://localhost:8000/api/logout')
 }
+
+// start analysis
+export const getReport = (image, account) => {
+  return axios.post('http://localhost:8000/api/recognition', {
+    image: image,
+    account: account,
+  })
+}
+// ok
+
+
+// share
+const share = (photoId, publicShare, content) => {
+  return axios.post('http://localhost:8000/api/share', {
+    photo_id: photoId,
+    public: publicShare,
+    content: content,
+  })
+}
+
+
 
 export const checkLogin = () => {
   return axios.get('http://localhost:8000/api/login/status')
@@ -72,19 +95,3 @@ export const getUserByAccount = (account) => {
   return axios.get('http://localhost:8000/api/user/account/' + account)
 }
 
-// start analysis
-export const getReport = (image) => {
-  return axios.post('http://localhost:8000/api/photo/', {
-    image: image,
-  })
-}
-
-// share
-export const share = (userId, photoId, publicShare, content) => {
-  return axios.post('http://localhost:8000/api/photo/share', {
-    userId: userId,
-    photoId: photoId,
-    public: publicShare,
-    content: content,
-  })
-}
