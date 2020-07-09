@@ -11,7 +11,7 @@
               @click="gotoOthersMy(user.account)"
             >
               <v-list-item-avatar >
-                <img :src="user.avatar">
+                <img :src="user.portrait">
               </v-list-item-avatar>
 
               <v-list-item-content>

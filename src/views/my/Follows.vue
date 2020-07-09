@@ -6,7 +6,7 @@
       <v-divider color="grey"></v-divider>
       <br>
       
-      <UserList :user="follows"></UserList>
+      <UserList :users="follows"></UserList>
     </v-container>
   </v-app>
 </template>
@@ -14,13 +14,22 @@
 <script>
 
 import UserList from "@/components/my/UserList";
-import showFollows from "../../api/api.js"
+import {showFollows} from "../../api/api.js"
 
 export default {
   name: "Follows",
   components: { UserList },
+  mounted() {
+    showFollows(localStorage.getItem("userId")).then(res=>{
+      console.log(res);
+      this.follows = res.data;
+    })
+      
+  },
+
   data: () => ({
-    follows: showFollows(localStorage.getItem("userId")),
+    follows: [],
   }),
+
 }
 </script>

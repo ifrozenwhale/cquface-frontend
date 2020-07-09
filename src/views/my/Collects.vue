@@ -15,13 +15,21 @@
 <script>
 
 import Shared from "@/components/my/Shared";
-import get_favorites from "../../api/api.js"
+import {get_favorites} from "../../api/api.js"
 
 export default {
   name: "Collects",
   components: {Shared},
+  mounted() {
+    get_favorites(localStorage.getItem("userId")).then(res=>{
+      console.log(res);
+      this.collects = res.data;
+    })
+      
+  },
+
   data: () => ({
-    collects: get_favorites(localStorage.getItem("userId")),
+    collects: [],
   }),
   methods: {
   }
