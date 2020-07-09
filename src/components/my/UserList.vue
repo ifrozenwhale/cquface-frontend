@@ -6,17 +6,17 @@
           <v-list two-line>
 
             <v-list-item 
-              v-for="fan in fans"
-              :key="fan.nickname"
-              @click="gotoOthersMy()"
+              v-for="user in users"
+              :key="user.nickname"
+              @click="gotoOthersMy(user.account)"
             >
               <v-list-item-avatar >
-                <img :src="fan.avatar">
+                <img :src="user.avatar">
               </v-list-item-avatar>
 
               <v-list-item-content>
-                <v-list-item-title v-html="fan.nickname"></v-list-item-title>
-                <v-list-item-subtitle v-html="fan.signature"></v-list-item-subtitle>
+                <v-list-item-title v-html="user.nickname"></v-list-item-title>
+                <v-list-item-subtitle v-html="user.signature"></v-list-item-subtitle>
               </v-list-item-content>
 
             </v-list-item>
@@ -31,28 +31,16 @@
 
 export default {
   name: "UserList",
+  props: {
+    users: {}
+  },
   data: () => ({
-    fans: [    { 
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg', 
-        nickname: "<span class='font-weight-bold'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
-        signature: 'Brunch this weekend?',
-        },
-      { 
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg', 
-        nickname: "<span class='font-weight-bold'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend." ,
-        signature: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-      },
-      { 
-        avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg', 
-        nickname: 'Oui oui', 
-        signature: "<span class='font-weight-bold'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?" 
-      },
-    ]
+    
   }),
   methods: {
-    gotoOthersMy() {
+    gotoOthersMy(other_account) {
       // 点击卡片，就会跳转到别人的主页去
-      this.$router.push("/othersmy");
+      this.$router.push( {name:'othersmy',params:{setid:other_account}});    
 
     }
   }

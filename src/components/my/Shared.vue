@@ -3,7 +3,7 @@
 
   <v-container fluid>
       <v-row 
-        v-for="(item, i) in items"
+        v-for="(user, i) in users"
         :key="i"
         cols="10"
         dense
@@ -11,18 +11,22 @@
         justify="center"
       >
         <v-col md="8">
-            <v-card text @click="gotoOthersMy()">
+            <v-card text @click="gotoDetailedShared(user.account)">
             <div class="d-flex flex-no-wrap justify-space-between">
 
             <div>
                 <!--用户名-->
                 <v-card-title
                   class="headline"
-                  v-text="item.nickname"
+                  v-text="user.report_name"
                 ></v-card-title>
+                
+                <v-card-subtitle
+                  v-text="user.report_time"
+                ></v-card-subtitle>
 
                 <!--报告分析-->
-                <v-card-text v-text="item.report"></v-card-text>
+                <v-card-text v-text="user.report_text"></v-card-text>
             </div>
 
         <!-- 用户照片 -->
@@ -31,7 +35,7 @@
                 size="25%"
                 tile
             >
-                <v-img :src="item.photo"></v-img>
+                <v-img :src="user.report_picture"></v-img>
             </v-avatar>
             
             </div>
@@ -46,33 +50,17 @@
 <script>
   export default {
     name: "Shared",
+    props: {
+      users: {}
+    }, 
     data: () => ({
-      items: [
-        {
-        // 从数据库接收信息     
-            photo: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-            // 用户名
-            nickname: 'Supermodel', 
-            // 报告分析
-            report: 'Foster the People',
-        },
-        {
-            photo: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-            nickname: 'A', 
-            report: 'test',
-        },
-        {
-            photo: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-            nickname: 'B', 
-            report: 'test',
-        },
-
-      ],
     }),
     methods: {
-      gotoOthersMy() {
-        // 点击卡片，就会跳转到别人的主页去
-      }
+      gotoDetailedShared(other_account) {
+      // 点击卡片，就会跳转到别人的分享去
+        this.$router.push( {name:'report',params:{setid:other_account}});    
+
+    }
     }
   }
 </script>

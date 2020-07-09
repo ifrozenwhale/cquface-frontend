@@ -63,3 +63,18 @@ export const share = (userId, photoId, publicShare, content) => {
     content: content,
   })
 }
+
+// showFans
+export const showFans = (account) => {
+  return axios.get('http://localhost:8000/api/showFans/' + account)
+}
+
+// showFollows
+export const showFollows = (account) => {
+  return axios.get('http://localhost:8000/api/showFollows/' + account)
+}
+
+// get_favorites
+export const get_favorites = (account) => {
+  return axios.get('http://localhost:8000/api/get_favorites/' + account)
+}
