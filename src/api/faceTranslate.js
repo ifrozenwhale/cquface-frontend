@@ -20,7 +20,7 @@ function trans(items, data) {
   items[1].type = data.beauty // beauty
   items[2].type = data.gender == 'male' ? '男' : '女' // gender
   items[2].icon = data.gender == 'male' ? 'mdi-gender-male' : 'mdi-gender-female'
-  items[3].type = data.glasses == false ? '否' : data.glasses == 'common' ? '普通眼镜' : '墨镜' // glass
+  items[3].type = data.glasses == false ? '否' : '是' // glass
   items[3].icon = data.glasses == false ? 'mdi-close-circle' : 'mdi-glasses'
   // angry:愤怒 disgust:厌恶 fear:恐惧 happy:高兴 sad:伤心 surprise:惊讶 neutral:无表情 pouty: 撅嘴 grimace:鬼脸
   switch (data.emotion) {
@@ -77,10 +77,10 @@ function trans(items, data) {
       items[6].type = '阿拉伯人' // race
       break
     default:
-     items[6].type = '黄种人' // race
-     items[6].color = 'orange accent-4' 
+      items[6].type = '黄种人' // race
+      items[6].color = 'orange accent-4'
   }
-  
+
   switch (data.face_type) {
     case 'square':
       items[7].type = '正方形'
@@ -106,5 +106,4 @@ function trans(items, data) {
       items[7].type = '圆脸'
       items[7].icon = 'mdi-circle-outline'
   }
-
 }

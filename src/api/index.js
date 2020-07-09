@@ -15,7 +15,7 @@ axiosInstance.interceptors.request.use(
     // 添加token
     if (localStorage.getItem('token')) {
       // 判断是否存在token，如果存在的话，则每个http header都加上token
-      config.headers.Authorization = localStorage.getItem('token')
+      config.headers['Authorization'] = localStorage.getItem('token')
     }
     return config
   },
@@ -32,8 +32,8 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response) {
       switch (error.response.status) {
-        case 401:
-          // 返回 401 清除token信息并跳转到登录页面
+        case 405:
+          // 返回 405 清除token信息并跳转到登录页面
           localStorage.removeItem('token')
           router.replace({
             path: 'login',

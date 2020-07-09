@@ -2,7 +2,23 @@ import Vue from 'vue'
 
 import Router from 'vue-router'
 import NotFound from '../components/404'
-import { Login, Register, Home, UserInfo, Welcome, test } from '../views'
+import {
+  Login,
+  Register,
+  Home,
+  UserInfo,
+  Welcome,
+  test,
+  My,
+  OthersMy,
+  BasicInfo,
+  Fans,
+  Follows,
+  Collects,
+  Discover,
+  Stars,
+  Report,
+} from '../views'
 
 Vue.use(Router)
 
@@ -49,6 +65,51 @@ const router = new Router({
       path: '/test',
       name: 'Test',
       component: test,
+    },
+    {
+      path: '/my',
+      name: 'My',
+      component: My,
+    },
+    {
+      path: '/othersmy',
+      name: 'OthersMy',
+      component: OthersMy,
+    },
+    {
+      path: '/basicInfo',
+      name: 'BasicInfo',
+      component: BasicInfo,
+    },
+    {
+      path: '/my/fans',
+      name: 'Fans',
+      component: Fans,
+    },
+    {
+      path: '/my/follows',
+      name: 'Follows',
+      component: Follows,
+    },
+    {
+      path: '/my/collects',
+      name: 'Collects',
+      component: Collects,
+    },
+    {
+      path: '/discover',
+      name: 'Discover',
+      component: Discover,
+    },
+    {
+      path: '/stars',
+      name: 'Stars',
+      component: Stars,
+    },
+    {
+      path: '/report',
+      name: 'Report',
+      component: Report,
     },
     {
       path: '*',

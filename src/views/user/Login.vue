@@ -144,7 +144,10 @@ export default {
           if (response.data.status == 200) {
             Event.$emit("welcome", true);
             // 本地存储userId
+            localStorage.setItem("token", response.data.token);
+            console.log(response);
             localStorage.setItem("userId", this.inputUsers.account);
+
             // 如果没有登录，跳转回被拦截的页面
             if (this.$route.query.redirect) {
               //如果存在参数

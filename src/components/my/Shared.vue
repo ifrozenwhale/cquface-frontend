@@ -1,0 +1,154 @@
+<template>
+
+  <v-container fluid>
+    <v-row
+      v-for="(item, i) in items"
+      :key="i"
+      cols="10"
+      dense
+      align="center"
+      justify="center"
+    >
+      <v-col md="5">
+        <v-card
+          text
+          v-if="reflesh"
+        >
+          <div class="
+            d-flex
+            flex-no-wrap
+            justify-space-between">
+            <div>
+              <!--用户名-->
+              <v-card-title
+                class="headline font-weight-bold"
+                v-text="item.report_name"
+              >
+              </v-card-title>
+
+              <!--报告分析-->
+              <v-card-text v-text="item.report_text"></v-card-text>
+            </div>
+
+            <!-- 用户照片 -->
+            <v-avatar
+              class="ma-3"
+              size="20%"
+              tile
+              lazy-src="https://frozenwhale.oss-cn-beijing.aliyuncs.com/img/man.png"
+            >
+              <v-img :src="item.report_picture"></v-img>
+            </v-avatar>
+
+          </div>
+
+          <v-card-actions>
+            <v-btn
+              dark
+              color="red darken-3"
+              @click="deletePhoto(i)"
+            >删除</v-btn>
+            <v-btn
+              dark
+              color="blue darken-3"
+              @click="gotoOthersMy()"
+            >查看详情</v-btn>
+          </v-card-actions>
+
+        </v-card>
+      </v-col>
+
+    </v-row>
+    <br>
+    <div class="text-center">
+      <v-pagination
+        v-model="page"
+        :length="total"
+        :total-visible="7"
+        @input="reload()"
+      ></v-pagination>
+    </div>
+    <v-dialog
+      v-model="dialog"
+      max-width="15%"
+      v-if="del"
+    >
+      <v-card mx:auto>
+        <v-card-title class="headline text-center">
+          这张照片被丢弃啦
+        </v-card-title>
+
+        <v-card-text>
+          <br />
+          <!-- add content -->
+          再来一张吧！
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="light-blue darken-4"
+            @click="dialog=false"
+          >
+            <span class="white--text text--lighten-2">确认</span>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
+
+</template>
+
+<script>
+import { getSharesByAccount, deletePhoto } from "../../api/api.js";
+export default {
+  name: "Shared",
+  mounted() {
+    getSharesByAccount(localStorage.getItem("userId"), 5, 1).then(res => {
+      console.log(res); // test
+      this.items = res.data;
+      this.items.forEach(e => {
+        e.report_picture = "data:image/png;base64," + e.report_picture;
+      });
+      this.total = res.data[0].total_num;
+    });
+  },
+  data: () => ({
+    items: [],
+    total: "1",
+    reflesh: true,
+    page: 1,
+    dialog: false,
+    del: true
+  }),
+  methods: {
+    deletePhoto(i) {
+      this.del = true;
+      // var that = this;
+      let photoId = this.items[i].photo_id;
+      deletePhoto(photoId).then(() => {
+        this.dialog = true;
+        // that.reload();
+        alert(this.dialog);
+      });
+    },
+    gotoOthersMy() {
+      // 点击卡片，就会跳转到别人的主页去
+    },
+
+    reload() {
+      getSharesByAccount(localStorage.getItem("userId"), 5, this.page).then(
+        res => {
+          console.log(res); // test
+          this.items = res.data;
+          this.items.forEach(e => {
+            e.report_picture = "data:image/png;base64," + e.report_picture;
+          });
+          this.reflesh = false;
+          this.$nextTick(() => (this.reflesh = true));
+        }
+      );
+    }
+  }
+};
+</script>

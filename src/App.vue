@@ -227,7 +227,6 @@ export default {
       }
     },
     star() {
-      this.ok = ~this.ok;
       this.starDialog = true;
     },
     logout() {

@@ -160,9 +160,9 @@
                       <v-avatar
                         left
                         v-if="item.icon"
-                       :color="item.color"
+                        :color="item.color"
                       >
-                        <v-icon >{{ item.icon }}</v-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
                       </v-avatar>
                       {{ item.type }}
                     </v-chip>
@@ -175,7 +175,7 @@
                 dark
                 color="light-blue darken-3"
                 width="30%"
-                v-if="!finish"
+                v-if="!finish & upload"
                 @click="start()"
               >开始分析</v-btn>
               <v-btn
@@ -191,13 +191,13 @@
                 width="15%"
                 v-if="finish"
                 @click="cancel()"
-              >取消</v-btn>
+              >丢弃</v-btn>
               <v-btn
                 dark
                 color="light-blue darken-3"
                 width="15%"
                 v-if="finish"
-                @click="dialog = true"
+                @click="selectShare()"
               >分享</v-btn>
             </v-card-actions>
           </v-card>
@@ -207,6 +207,7 @@
     <v-dialog
       v-model="dialog"
       max-width="15%"
+      v-if="!del"
     >
       <v-card mx:auto>
         <v-card-title class="headline text-center">
@@ -242,10 +243,37 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog
+      v-model="dialog"
+      max-width="15%"
+      v-if="del"
+    >
+      <v-card mx:auto>
+        <v-card-title class="headline text-center">
+          这张照片被丢弃啦
+        </v-card-title>
+
+        <v-card-text>
+          <br />
+          <!-- add content -->
+          再来一张吧！
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="light-blue darken-4"
+            @click="dialog=false"
+          >
+            <span class="white--text text--lighten-2">确认</span>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 <script>
-import { getReport, share } from "../../api/api.js";
+import { getReport, share, deletePhoto } from "../../api/api.js";
 import { voicePrompt } from "../../api/voice.js";
 import { trans } from "../../api/faceTranslate.js";
 
@@ -265,10 +293,12 @@ export default {
       thisVideo: null,
       finish: false,
       dialog: false,
+      del: false,
       content: "",
       // file upload part
       file: null,
       fileMode: false,
+      upload: false,
       photoId: "",
       items: [
         { name: "年龄", type: 19 },
@@ -297,18 +327,23 @@ export default {
       this.thisCancas = document.getElementById("canvasCamera");
       this.thisContext = this.thisCancas.getContext("2d");
     },
+    selectShare() {
+      this.del = false;
+      this.dialog = true;
+    },
     fileChange() {
       var reader = new FileReader(); //读取文件
       let that = this;
       if (this.file != null) {
         this.fileMode = true;
+        this.upload = true;
         reader.readAsDataURL(this.file);
         reader.onload = function() {
           that.imgSrc = reader.result;
-          console.log(that.imgSrc);
         };
       } else {
         this.fileMode = false;
+        this.upload = false;
         this.imgSrc =
           "https://frozenwhale.oss-cn-beijing.aliyuncs.com/img/man.png";
       }
@@ -340,29 +375,30 @@ export default {
       let base = this.imgSrc.split(",")[1];
       console.log(base);
       getReport(base, account).then(res => {
-        trans(this.items, res.data)
-        this.photoId = res.data.photo_id
+        trans(this.items, res.data);
+        this.photoId = res.data.photo_id;
       });
       // get report
       this.finish = true;
     },
     cancel() {
       this.finish = false;
+      this.del = true;
       this.items.forEach(element => {
         element.type = "";
         element.icon = "";
       });
+      // delete
+      deletePhoto(this.photoId).then(() => {
+        this.dialog = true;
+      });
     },
     publicShare() {
-      share(this.photoId, true, this.content).then(res => {
-        console.log(res.data);
-      });
+      share(this.photoId, true, this.content).then(() => {});
       this.dialog = false;
     },
     privateShare() {
-      share(this.photoId, false, this.content).then(res => {
-        console.log(res.data);
-      });
+      share(this.photoId, false, this.content).then(() => {});
       this.dialog = false;
     },
     videoClick() {
@@ -382,8 +418,10 @@ export default {
         this.imgSrc =
           "https://frozenwhale.oss-cn-beijing.aliyuncs.com/img/man.png";
         this.imageInfo = "拍照";
+        this.upload = false;
       } else {
         this.setImage();
+        this.upload = true;
         this.imageInfo = "清除";
       }
       this.stopNavigator();
@@ -455,6 +493,7 @@ export default {
 
     setImage() {
       var _this = this;
+
       // 点击，canvas画图
       _this.thisContext.drawImage(
         _this.thisVideo,
