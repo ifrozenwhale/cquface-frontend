@@ -114,7 +114,7 @@
 
 <script>
 import { Event } from "../../main.js";
-import { login, checkLogin } from "../../api/api";
+import { login } from "../../api/api";
 export default {
   data() {
     return {
@@ -130,12 +130,10 @@ export default {
     };
   },
   created() {
-    checkLogin().then(res => {
-      if (res.data.status == 200) {
-        Event.$emit("welcome", true);
-        this.$router.push("/home");
-      }
-    });
+    if (localStorage.getItem("token")) {
+      Event.$emit("welcome", true);
+      this.$router.push("/home");
+    }
   },
   methods: {
     userLogin() {
@@ -146,17 +144,17 @@ export default {
             // 本地存储userId
             localStorage.setItem("token", response.data.token);
             console.log(response);
-            localStorage.setItem("userId", this.inputUsers.account);
+            localStorage.setItem("account", this.inputUsers.account);
 
             // 如果没有登录，跳转回被拦截的页面
             if (this.$route.query.redirect) {
               //如果存在参数
               let redirect = this.$route.query.redirect;
+              console.log(redirect);
               this.$router.push(redirect); //则跳转至进入登录页前的路由
             } else {
-              this.$router.push("/index"); //否则跳转至首页
+              this.$router.push("/home"); //否则跳转至首页
             }
-            this.$router.push("/home");
           } else if (response.data.status == 401) {
             this.dialog = true;
             this.errorMsg = response.data.msg;

@@ -56,7 +56,7 @@ export default {
   name: "FanFollowCollect",
   mounted() {
     var that = this;
-    getFanFollowCollectNum(localStorage.getItem("userId")).then(res => {
+    getFanFollowCollectNum(localStorage.getItem("account")).then(res => {
       that.fan_num = res.data.fan_num;
       that.follow_num = res.data.follow_num;
       that.collect_num = res.data.collect_num;

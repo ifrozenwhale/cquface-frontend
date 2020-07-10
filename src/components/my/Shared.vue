@@ -51,7 +51,7 @@
             <v-btn
               dark
               color="blue darken-3"
-              @click="gotoOthersMy()"
+              @click="showDetail(i)"
             >查看详情</v-btn>
           </v-card-actions>
 
@@ -100,11 +100,15 @@
 </template>
 
 <script>
-import { getSharesByAccount, deletePhoto } from "../../api/api.js";
+import { getSharesByAccount, deletePhoto, getUserId } from "../../api/api.js";
 export default {
   name: "Shared",
   mounted() {
-    getSharesByAccount(localStorage.getItem("userId"), 5, 1).then(res => {
+    let account = localStorage.getItem("account");
+    getUserId(account).then(res => {
+      this.userId = res.data.user_id;
+    });
+    getSharesByAccount(account, 5, 1).then(res => {
       console.log(res); // test
       this.items = res.data;
       this.items.forEach(e => {
@@ -119,25 +123,32 @@ export default {
     reflesh: true,
     page: 1,
     dialog: false,
-    del: true
+    del: true,
+    userId: ""
   }),
   methods: {
     deletePhoto(i) {
       this.del = true;
       // var that = this;
       let photoId = this.items[i].photo_id;
-      deletePhoto(photoId).then(() => {
+      deletePhoto(photoId, localStorage.getItem("account")).then(() => {
         this.dialog = true;
-        // that.reload();
-        alert(this.dialog);
+        this.reload();
       });
     },
-    gotoOthersMy() {
-      // 点击卡片，就会跳转到别人的主页去
+    showDetail(i) {
+      // 点击卡片，就会跳转详情
+      this.$router.push({
+        path: "/report",
+        query: {
+          user_id: this.userId,
+          photo_id: this.items[i].photo_id
+        }
+      });
     },
 
     reload() {
-      getSharesByAccount(localStorage.getItem("userId"), 5, this.page).then(
+      getSharesByAccount(localStorage.getItem("account"), 5, this.page).then(
         res => {
           console.log(res); // test
           this.items = res.data;

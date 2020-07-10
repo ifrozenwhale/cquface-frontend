@@ -1,5 +1,10 @@
 <template>
   <v-app>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <v-container>
       <h1 class="white grey--text"> Fans </h1>
 
@@ -18,7 +23,7 @@ export default {
   name: "Follows",
   components: { UserList },
   mounted() {
-    showFans(localStorage.getItem("userId")).then(res => {
+    showFans(localStorage.getItem("account")).then(res => {
       console.log(res);
       this.fans = res.data;
     });

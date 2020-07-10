@@ -287,7 +287,7 @@ export default {
       // change my info
       valid: true,
 
-      account: localStorage.getItem("userId"),
+      account: localStorage.getItem("account"),
       nameRules: [
         v => !!v || "Name is required",
         v => (v && v.length <= 10) || "Name must be less than 10 characters"
@@ -301,7 +301,7 @@ export default {
 
   mounted() {
     var that = this;
-    let account = localStorage.getItem("userId");
+    let account = localStorage.getItem("account");
     getMyInfo(account).then(res => {
       this.nickname = res.data.nickname;
       this.signature = res.data.signature;
@@ -325,7 +325,7 @@ export default {
   },
   methods: {
     submitHead() {
-      updateHead(localStorage.getItem("userId"), this.imgSrc).then(() => {
+      updateHead(localStorage.getItem("account"), this.imgSrc).then(() => {
         this.dialogTitle = "提交头像成功";
         this.dialogText = "你很好看哦！";
       }),

@@ -301,18 +301,17 @@ export default {
       upload: false,
       photoId: "",
       items: [
-        { name: "年龄", type: 19 },
-        { name: "颜值评分", type: 90 },
-        { name: "性别", type: "男", probability: 0.9 },
-        { name: "是否戴眼镜", type: "否", probability: 0.9 },
+        { name: "年龄", type: "" },
+        { name: "颜值评分", type: "" },
+        { name: "性别", type: "" },
+        { name: "是否戴眼镜", type: "" },
         {
           name: "情绪",
-          type: "开心",
-          probability: 0.9
+          type: ""
         },
-        { name: "表情", type: "大笑", probability: 0.9 },
-        { name: "人种", type: "黄种人", probability: 0.9 },
-        { name: "脸型", type: "圆脸", probability: 0.9 }
+        { name: "表情", type: "" },
+        { name: "人种", type: "" },
+        { name: "脸型", type: "" }
         // { name: "脸长", type: "23.4", probability: 0.9 },
         // { name: "脸宽", type: "21", probability: 0.9 }
       ]
@@ -361,7 +360,7 @@ export default {
     },
     start() {
       // let type = this.fileMode ? "FILE" : "BASE64";
-      let account = localStorage.getItem("userId");
+      let account = localStorage.getItem("account");
       // { name: "年龄", type: 19 },
       // { name: "颜值评分", type: 90 },
       // { name: "性别", type: "男", probability: 0.9 },
@@ -389,17 +388,32 @@ export default {
         element.icon = "";
       });
       // delete
-      deletePhoto(this.photoId).then(() => {
+      deletePhoto(this.photoId, localStorage.getItem("account")).then(() => {
         this.dialog = true;
       });
     },
-    publicShare() {
-      share(this.photoId, true, this.content).then(() => {});
+    finsihShare() {
       this.dialog = false;
+      this.finish = false;
+      this.content = "";
+    },
+    publicShare() {
+      share(
+        localStorage.getItem("account"),
+        this.photoId,
+        true,
+        this.content
+      ).then(() => {});
+      this.finsihShare();
     },
     privateShare() {
-      share(this.photoId, false, this.content).then(() => {});
-      this.dialog = false;
+      share(
+        localStorage.getItem("account"),
+        this.photoId,
+        false,
+        this.content
+      ).then(() => {});
+      this.finsihShare();
     },
     videoClick() {
       if (this.videoOpen) {

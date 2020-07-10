@@ -119,15 +119,7 @@
                         v-model="inputUsers.email"
                       ></v-text-field>
                     </validationProvider>
-                    <v-text-field
-                      id="major"
-                      :filled="false"
-                      required
-                      label="Major"
-                      name="major"
-                      prepend-icon="mdi-dialpad"
-                      v-model="inputUsers.major"
-                    ></v-text-field>
+
                   </v-form>
                 </ValidationObserver>
               </v-card-text>

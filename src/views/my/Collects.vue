@@ -19,7 +19,7 @@ export default {
   name: "Collects",
   components: { Shared },
   mounted() {
-    getFavorites(localStorage.getItem("userId")).then(res => {
+    getFavorites(localStorage.getItem("account")).then(res => {
       console.log(res);
       this.collects = res.data;
     });

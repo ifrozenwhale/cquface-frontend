@@ -17,8 +17,9 @@
           @click="refresh"
         >
           <h1 style="color:#757575 ; font-size:50px">
-            发现
+            点击发现更多
           </h1>
+
           <v-divider> </v-divider>
         </v-col>
       </v-row>
@@ -73,7 +74,7 @@
                   <!-- 头像 -->
                   <v-list-item-avatar
                     tile
-                    size="120"
+                    size="90"
                     color="grey"
                   >
                     <v-img :src="item.avator"> </v-img>
@@ -90,9 +91,10 @@
           >
             <v-card
               class="mx-auto"
-              max-width="100%"
+              max-width="90%"
               height="500px"
             >
+              <br><br>
               <!-- 用户设置的文案 -->
               <v-card-text @click="openReport(index)">
                 <p class="display-1 headline mb-10">
@@ -155,6 +157,7 @@
               </v-chip>
 
               <br />
+
               <!-- 点赞/收藏/评论按钮 -->
               <v-container
                 fluid
@@ -251,6 +254,34 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog
+        v-model="confirmDialog"
+        max-width="15%"
+      >
+        <v-card mx:auto>
+          <v-card-title class="headline text-center">
+            评论成功！
+          </v-card-title>
+
+          <v-card-text>
+            <br />
+            <!-- add content -->
+            TA收到你的评论啦，快去看看吧！
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              color="light-blue darken-3"
+              class="red-text"
+              @click="confirmDialog = false"
+            >
+              <span class="white--text text--lighten-2"> 确认</span>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-main>
   </v-app>
 </template>
@@ -267,7 +298,9 @@ export default {
       currentAccount: "20200000",
       //是否打开对话框
       dialog: false,
+      confirmDialog: false,
       i: 0,
+      reload: true,
       content: "",
       // 发现项目
       items: [
@@ -463,8 +496,12 @@ export default {
         this.content
       ).then(response => {
         console.log(response);
-        alert("评论成功啦");
+        this.$nextTick(() => {
+          this.items[i].commentNum++;
+        });
       });
+      this.dialog = false;
+      this.confirmDialog = true;
     },
 
     commentBtn(index) {
@@ -473,7 +510,7 @@ export default {
 
     //刷新
     refresh() {
-      this.currentAccount = localStorage.getItem("userId");
+      this.currentAccount = localStorage.getItem("account");
       getDiscover(this.currentAccount, 5).then(response => {
         console.log(response.data);
         for (this.i = 0; this.i < 5; this.i++) {
@@ -494,6 +531,7 @@ export default {
           this.items[this.i].user_id = response.data[this.i].user_id;
           this.items[this.i].faceRate = response.data[this.i].score;
           this.items[this.i].isfavorite = response.data[this.i].is_favorites;
+          this.items[this.i].avator = response.data[this.i].portrait;
         }
       });
     }

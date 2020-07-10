@@ -38,14 +38,7 @@
       >
         <span class="hidden-sm-and-down">CQU Face</span>
       </v-toolbar-title>
-      <v-text-field
-        flat
-        solo-inverted
-        hide-details
-        prepend-inner-icon="mdi-magnify"
-        label="Search"
-        class="hidden-sm-and-down"
-      ></v-text-field>
+
       <v-spacer></v-spacer>
       <!-- if not login -->
       <v-btn icon>
@@ -89,7 +82,10 @@
       </v-dialog>
       <!-- if login -->
 
-      <v-btn icon>
+      <v-btn
+        icon
+        @click="goMy()"
+      >
         <v-icon large>mdi-account-circle </v-icon>
       </v-btn>
 
@@ -195,22 +191,25 @@ export default {
       { name: "3", icon: "mdi-account", text: "我的" }
     ]
   }),
-  watch: {
-    changeStatus() {
-      this.ok = false;
-      this.$nextTick(() => {
-        this.ok = true;
-      });
-    }
-  },
+  watch: {},
 
   mounted() {
+    // 判断是否登录
     var that = this;
     Event.$on("welcome", function() {
-      that.ok = true;
+      if (localStorage.getItem("token")) {
+        that.ok = true;
+        that.ok = false;
+        that.$nextTick(() => {
+          that.ok = true;
+        });
+      }
     });
   },
   methods: {
+    goMy() {
+      this.$router.push("/my");
+    },
     test(index) {
       switch (index) {
         case 0:
@@ -227,6 +226,7 @@ export default {
       }
     },
     star() {
+      this.ok = true;
       this.starDialog = true;
     },
     logout() {
@@ -234,13 +234,17 @@ export default {
     },
     starConfirm() {
       this.starDialog = false;
+
       const h = "https://github.com/FrozenWhalePP/cquface";
       window.open(h);
     },
     logoutConfirm() {
-      logout().then(res => {
+      logout(localStorage.getItem("account")).then(res => {
         if (res.data.status == 200) {
-          localStorage.removeItem("userId");
+          // localStorage.removeItem("userId");
+          localStorage.clear();
+          this.ok = false;
+          sessionStorage.clear();
           this.$router.push("/login");
         }
       });

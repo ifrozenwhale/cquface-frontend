@@ -1,8 +1,6 @@
 <template>
   <v-app>
-
     <v-list two-line>
-
       <!-- account当前登录用户的账号 -->
       <v-list-item>
         <v-list-item-icon>
@@ -13,7 +11,6 @@
           <v-list-item-title>Account</v-list-item-title>
           <v-list-item-subtitle>1234</v-list-item-subtitle>
         </v-list-item-content>
-
       </v-list-item>
 
       <v-divider inset></v-divider>
@@ -28,12 +25,10 @@
           <v-list-item-title>Nickname</v-list-item-title>
           <v-list-item-subtitle>yuhanyao</v-list-item-subtitle>
         </v-list-item-content>
-
       </v-list-item>
 
       <!-- ‘signature’：个性签名（字符串） -->
       <v-list-item>
-
         <v-list-item-icon>
           <v-icon color="indigo">mdi-pen</v-icon>
         </v-list-item-icon>
@@ -42,7 +37,6 @@
           <v-list-item-title>Signature</v-list-item-title>
           <v-list-item-subtitle>1234</v-list-item-subtitle>
         </v-list-item-content>
-
       </v-list-item>
 
       <v-divider inset></v-divider>
@@ -57,7 +51,6 @@
           <v-list-item-title>QQ</v-list-item-title>
           <v-list-item-subtitle>1345887396</v-list-item-subtitle>
         </v-list-item-content>
-
       </v-list-item>
 
       <!-- ‘email’：邮箱（字符串） -->
@@ -89,12 +82,11 @@
 
       <v-divider inset></v-divider>
     </v-list>
-
   </v-app>
 </template>
 
 <script>
 export default {
-  name: "MyInfo"
-};
+  name: 'MyInfo',
+}
 </script>

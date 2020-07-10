@@ -22,6 +22,10 @@ export {
   getReportDetail,
   star,
   commentAPI,
+  getOtherInfo,
+  showOthersShared,
+  getUserId,
+  follow,
 }
 
 export const getTests = () => {
@@ -74,21 +78,17 @@ const register = (account, username, password, email, major) => {
  * GET
  * @returns 退出登录请求状态
  */
-const logout = () => {
-  return axios.get('http://localhost:8000/api/logout')
-}
-
-// start analysis
-export const getReport = (image, account) => {
-  return axios.post('http://localhost:8000/api/recognition', {
-    image: image,
+const logout = (account) => {
+  return axios.post('http://localhost:8000/api/logout', {
     account: account,
   })
 }
+
 // o
 // share
-const share = (photoId, publicShare, content) => {
+const share = (account, photoId, publicShare, content) => {
   return axios.post('http://localhost:8000/api/share', {
+    account: account,
     photo_id: photoId,
     public: publicShare,
     content: content,
@@ -125,17 +125,20 @@ const updateInfo = (account, nickname, signature, gender, email, QQ, city, age) 
   })
 }
 
-const getSharesByAccount = (account, each, page) => {
+const getSharesByAccount = (account, each, page, account_login) => {
   return axios.get('http://localhost:8000/api/shares/account/' + account, {
     params: {
       each: each,
       page: page,
+      account_login: account_login,
     },
   })
 }
 
-const deletePhoto = (photoId) => {
-  return axios.delete('http://localhost:8000/api/share/photo/' + photoId)
+const deletePhoto = (photoId, account) => {
+  return axios.post('http://localhost:8000/api/share/photo/' + photoId, {
+    account: account,
+  })
 }
 
 // showFans
@@ -150,16 +153,16 @@ const showFollows = (account) => {
 
 // get_favorites
 const getFavorites = (account) => {
-  return axios.get('http://localhost:8000/api/get_favorites/' + account)
+  return axios.get('http://localhost:8000/api/favorites/' + account)
 }
 
 const getFanFollowCollectNum = (account) => {
   return axios.get('http://localhost:8000/api/fanFollowCollect/' + account)
 }
 
-const star = (user_id, photo_id) => {
+const star = (account, photo_id) => {
   return axios.post(`http://127.0.0.1:8000/api/star`, {
-    user_id: user_id,
+    account: account,
     photo_id: photo_id,
   })
 }
@@ -180,6 +183,28 @@ const getReportDetail = (user_id, photo_id, user_now) => {
   return axios.get('http://127.0.0.1:8000/api/share_info/' + user_id + '/' + photo_id + '/' + user_now)
 }
 
+const getOtherInfo = (account, accountLogin) => {
+  return axios.get('http://localhost:8000/api/get_other_info/' + account, {
+    params: {
+      account_login: accountLogin,
+    },
+  })
+}
+
+const showOthersShared = (account) => {
+  return axios.get('http://localhost:8000/api/login/showOthersShared' + account)
+}
+
+const getUserId = (account) => {
+  return axios.get('http://localhost:8000/api/get_user_id/' + account)
+}
+
+const follow = (account, accountOther) => {
+  return axios.post('http://localhost:8000/api/followAndUnfollow', {
+    account: account,
+    account_other: accountOther,
+  })
+}
 export const checkLogin = () => {
   return axios.get('http://localhost:8000/api/login/status')
 }
@@ -193,4 +218,11 @@ export const savePhoto = (base64) => {
 
 export const getUserByAccount = (account) => {
   return axios.get('http://localhost:8000/api/user/account/' + account)
+}
+// start analysis
+export const getReport = (image, account) => {
+  return axios.post('http://localhost:8000/api/recognition', {
+    image: image,
+    account: account,
+  })
 }
