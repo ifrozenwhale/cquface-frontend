@@ -318,18 +318,23 @@ export default {
     };
   },
   mounted() {
+    // 初始化摄像头
     this.initCanvas();
   },
   methods: {
+    // 初始化摄像头
     initCanvas() {
       console.log("初始化canvas");
       this.thisCancas = document.getElementById("canvasCamera");
       this.thisContext = this.thisCancas.getContext("2d");
     },
+    //选择分享的权限
     selectShare() {
       this.del = false;
       this.dialog = true;
     },
+
+    // 当文件改变时，触发
     fileChange() {
       var reader = new FileReader(); //读取文件
       let that = this;
@@ -348,6 +353,7 @@ export default {
       }
     },
 
+    // 将报告转化为格式化的文本
     toString() {
       var str = "您真是太可爱啦，现在为您语音播报。";
       this.items.forEach(e => {
@@ -355,22 +361,26 @@ export default {
       });
       return str;
     },
+    // 语音播报
     voiceReport() {
       voicePrompt(this.toString());
     },
+    // 开始
     start() {
       // let type = this.fileMode ? "FILE" : "BASE64";
       let account = localStorage.getItem("account");
-      // { name: "年龄", type: 19 },
-      // { name: "颜值评分", type: 90 },
-      // { name: "性别", type: "男", probability: 0.9 },
-      // { name: "是否戴眼镜", type: "否", probability: 0.9 },
-      // { name: "情绪", type: "开心", probability: 0.9, icon: "mdi-close" },
-      // { name: "表情", type: "大笑", probability: 0.9 },
-      // { name: "人种", type: "黄种人", probability: 0.9 },
-      // { name: "脸型", type: "圆脸", probability: 0.9 },
-      // { name: "脸长", type: "23.4", probability: 0.9 },
-      // { name: "脸宽", type: "21", probability: 0.9 }
+      /*
+      { name: "年龄", type: 19 },
+      { name: "颜值评分", type: 90 },
+      { name: "性别", type: "男", probability: 0.9 },
+      { name: "是否戴眼镜", type: "否", probability: 0.9 },
+      { name: "情绪", type: "开心", probability: 0.9, icon: "mdi-close" },
+      { name: "表情", type: "大笑", probability: 0.9 },
+      { name: "人种", type: "黄种人", probability: 0.9 },
+      { name: "脸型", type: "圆脸", probability: 0.9 },
+      { name: "脸长", type: "23.4", probability: 0.9 },
+      { name: "脸宽", type: "21", probability: 0.9 }
+      */
       let base = this.imgSrc.split(",")[1];
       console.log(base);
       getReport(base, account).then(res => {
@@ -380,6 +390,7 @@ export default {
       // get report
       this.finish = true;
     },
+    // 丢弃
     cancel() {
       this.finish = false;
       this.del = true;
@@ -392,11 +403,13 @@ export default {
         this.dialog = true;
       });
     },
+    // 结束分享的时候
     finsihShare() {
       this.dialog = false;
       this.finish = false;
       this.content = "";
     },
+    // 公开分享
     publicShare() {
       share(
         localStorage.getItem("account"),
@@ -406,6 +419,7 @@ export default {
       ).then(() => {});
       this.finsihShare();
     },
+    // 私有分享
     privateShare() {
       share(
         localStorage.getItem("account"),
@@ -415,6 +429,7 @@ export default {
       ).then(() => {});
       this.finsihShare();
     },
+    // 视频点击按钮
     videoClick() {
       if (this.videoOpen) {
         this.stopNavigator();
@@ -427,6 +442,7 @@ export default {
         this.imageInfo = "拍照";
       }
     },
+    // 图像点击
     imageClick() {
       if (!this.videoOpen) {
         this.imgSrc =
@@ -443,6 +459,7 @@ export default {
       this.videoInfo = "打开摄像头";
     },
 
+    // 打开摄像头视频
     openVideo() {
       var _this = this;
 

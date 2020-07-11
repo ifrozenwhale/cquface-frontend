@@ -1,9 +1,13 @@
 <template>
+  <!-- app包裹器
+  用于包裹所有容器，确保在页面上
+  的边界可以正常被定位与正常显示 -->
   <v-app>
     <v-container fluid>
+      <!-- 使用fluid属性的元件，
+        便于灵活布局 -->
       <v-row justify="center">
         <v-col md="5">
-
           <!-- 头像卡 -->
           <v-card
             :color="color"
@@ -25,6 +29,7 @@
               align="center"
               justify="center"
             >
+              <!-- 头像文件输入窗口 -->
               <v-col sm="5">
                 <v-file-input
                   accept="image/*"
@@ -38,14 +43,12 @@
                   prepend-icon="mdi-image"
                   @change="changePortrait()"
                 ></v-file-input>
-
               </v-col>
             </v-row>
-
           </v-card>
 
           <v-row></v-row>
-          <br>
+          <br />
           <!-- 修改与提交的按钮 -->
           <v-row justify="center">
             <v-btn
@@ -54,31 +57,31 @@
               v-if="toSubmitHead"
               @click="submitHead()"
             >submit portrait</v-btn>
+            <!-- 确认提交的按钮 -->
             <v-btn
               text
               color="grey darken-2"
               @click="changeInfo()"
             >
-              <template v-if="change==false">
+              <template v-if="change == false">
                 change my information
               </template>
               <template v-else>
                 submit my information
               </template>
-
+              <!-- 修改的按钮 -->
             </v-btn>
           </v-row>
         </v-col>
 
         <!-- 资料栏 -->
         <v-col
-          md=6
+          md="6"
           offset-md="1"
         >
-          <template v-if="change==false & isRouterAlive">
+          <template v-if="(change == false) & isRouterAlive">
             <v-app>
               <v-list two-line>
-
                 <!-- account当前登录用户的账号 -->
                 <v-list-item>
                   <v-list-item-icon>
@@ -87,9 +90,8 @@
 
                   <v-list-item-content>
                     <v-list-item-title>Account</v-list-item-title>
-                    <v-list-item-subtitle>{{account}}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ account }}</v-list-item-subtitle>
                   </v-list-item-content>
-
                 </v-list-item>
 
                 <v-divider inset></v-divider>
@@ -102,23 +104,20 @@
 
                   <v-list-item-content>
                     <v-list-item-title>Nickname</v-list-item-title>
-                    <v-list-item-subtitle>{{nickname}}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ nickname }}</v-list-item-subtitle>
                   </v-list-item-content>
-
                 </v-list-item>
 
                 <!-- ‘signature’：个性签名（字符串） -->
                 <v-list-item>
-
                   <v-list-item-icon>
                     <v-icon color="indigo">mdi-pen</v-icon>
                   </v-list-item-icon>
 
                   <v-list-item-content>
                     <v-list-item-title>Signature</v-list-item-title>
-                    <v-list-item-subtitle>{{signature}}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ signature }}</v-list-item-subtitle>
                   </v-list-item-content>
-
                 </v-list-item>
 
                 <v-divider inset></v-divider>
@@ -131,9 +130,8 @@
 
                   <v-list-item-content>
                     <v-list-item-title>QQ</v-list-item-title>
-                    <v-list-item-subtitle>{{QQ}}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ QQ }}</v-list-item-subtitle>
                   </v-list-item-content>
-
                 </v-list-item>
 
                 <!-- ‘email’：邮箱（字符串） -->
@@ -145,7 +143,7 @@
                   <v-list-item-content>
                     <v-list-item-title>E-mail</v-list-item-title>
                     <v-list-item-subtitle>
-                      {{email}}
+                      {{ email }}
                       <!-- 此处要改成从后端拿到的邮箱信息 -->
                     </v-list-item-subtitle>
                   </v-list-item-content>
@@ -159,13 +157,12 @@
 
                   <v-list-item-content>
                     <v-list-item-title>City</v-list-item-title>
-                    <v-list-item-subtitle>{{city}}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ city }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
 
                 <v-divider inset></v-divider>
               </v-list>
-
             </v-app>
             <!-- <MyInfo v-if="isRouterAlive"></MyInfo> -->
           </template>
@@ -177,7 +174,6 @@
                   v-model="valid"
                   :lazy-validation="lazy"
                 >
-
                   <v-text-field
                     v-model="account"
                     label="Account"
@@ -222,17 +218,15 @@
                     label="City"
                     required
                   ></v-text-field>
-
                 </v-form>
               </v-container>
-
             </v-app>
-
           </template>
         </v-col>
-
       </v-row>
     </v-container>
+
+    <!-- 确认对话框 -->
     <v-dialog
       v-model="dialog"
       max-width="350"
@@ -242,6 +236,7 @@
           {{ dialogTitle }}
         </v-card-title>
 
+        <!-- 对话的文本信息 -->
         <v-card-text>
           {{ dialogText }}
         </v-card-text>
@@ -249,9 +244,10 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
+          <!-- 确认按钮 -->
           <v-btn
             color="light-blue darken-4"
-            @click="dialog=false"
+            @click="dialog = false"
           >
             <span class="white--text text--lighten-2">确认</span>
           </v-btn>
@@ -262,6 +258,7 @@
 </template>
 
 <script>
+// 从api中导入需要使用的方法
 import { updateInfo, getMyInfo } from "../../api/api.js";
 import { getMyHead, updateHead } from "../../api/api.js";
 export default {

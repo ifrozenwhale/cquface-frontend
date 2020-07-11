@@ -1,10 +1,14 @@
 <template>
-  <!-- app包裹器 -->
+  <!-- app包裹器
+  用于包裹所有容器，确保在页面上
+  的边界可以正常被定位与正常显示 -->
   <v-app id="discover">
     <v-main>
       <br />
       <br />
-      <!-- 大标题的制作 -->
+      <!-- 大标题的制作 
+      使用v-row进行分行，然后用H1
+      标题渲染出需要的大标题-->
       <v-row
         justify="space-around"
         align="center"
@@ -16,17 +20,18 @@
           md="20"
           @click="refresh"
         >
-          <h1 style="color:#757575 ; font-size:50px">
+          <!-- 绑定了点击重新获
+          取推送数据的操作 -->
+          <h1 style="color: #757575; font-size: 50px;">
             点击发现更多
           </h1>
-
           <v-divider> </v-divider>
+          <!-- 使用divider
+            将标题和正文分开 -->
         </v-col>
       </v-row>
-
       <br />
       <br />
-
       <!-- 使用v-for迭代生成多个项目 -->
       <div
         v-for="(item, index) in items"
@@ -41,7 +46,8 @@
             md="2"
             xs="4"
           >
-            <!-- 放置图片、昵称、头像、签名等个人信息的卡片 -->
+            <!-- 放置图片、昵称、头像、
+              签名等个人信息的卡片 -->
             <v-card @click="openReport(index)">
               <div
                 class="text-center align-center justify-center"
@@ -94,7 +100,7 @@
               max-width="90%"
               height="500px"
             >
-              <br><br>
+              <br /><br />
               <!-- 用户设置的文案 -->
               <v-card-text @click="openReport(index)">
                 <p class="display-1 headline mb-10">
@@ -107,7 +113,8 @@
                 text-color="white"
               >
                 <!-- 个人信息 -->
-                <!-- 分析结果 -->
+                <!-- 分析结果，以chip的
+                  方式呈现一小部分 -->
                 <v-avatar left>
                   <v-icon>mdi-account-circle</v-icon>
                 </v-avatar>
@@ -179,6 +186,7 @@
                       :content="item.likeNum"
                       overlap
                     >
+                      <!-- 按钮 链接到点赞的方法 -->
                       <v-btn
                         x-large
                         icon
@@ -200,6 +208,7 @@
                       :content="item.commentNum"
                       overlap
                     >
+                      <!-- 按钮 链接到点赞的方法 -->
                       <v-btn
                         x-large
                         icon
@@ -230,7 +239,7 @@
           <v-card-title class="headline text-center">
             编写评论
           </v-card-title>
-
+          <!-- 收取评价内容的文本区域 -->
           <v-card-text>
             <br />
             <!-- add content -->
@@ -243,7 +252,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-
+            <!-- 提交评论的按钮 -->
             <v-btn
               color="light-blue darken-3"
               class="red-text"
@@ -258,6 +267,7 @@
         v-model="confirmDialog"
         max-width="15%"
       >
+        <!-- 弹窗的提示 -->
         <v-card mx:auto>
           <v-card-title class="headline text-center">
             评论成功！
@@ -271,7 +281,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-
+            <!-- 确认提交的按钮 -->
             <v-btn
               color="light-blue darken-3"
               class="red-text"
@@ -287,6 +297,7 @@
 </template>
 
 <script>
+// 从api中导入需要使用的方法
 import { getDiscover } from "../../api/api";
 import { star } from "../../api/api";
 import { commentAPI } from "../../api/api";
@@ -458,6 +469,8 @@ export default {
     };
   },
 
+  // 每次页面加载的时候，
+  // 调用刷新函数进行刷新
   mounted: function() {
     this.refresh();
   },
@@ -469,6 +482,7 @@ export default {
       console.log(this.items[index].user_id);
       this.$router.push({
         path: "/report",
+        // 将点击的用户编号和图片编号传给report页面
         query: {
           user_id: this.items[index].user_id,
           photo_id: this.items[index].photo_id
@@ -476,20 +490,23 @@ export default {
       });
     },
 
-    //点赞
+    //收藏
     like(index) {
+      // 前端显示，颜色切换与显示的收藏数切换的逻辑
       if (this.items[index].isfavorite == true) this.items[index].likeNum--;
       else if (this.items[index].isfavorite == false)
         this.items[index].likeNum++;
+      //调用api，修改数据库中的收藏与否
       star(this.currentAccount, this.items[index].photo_id).then(response => {
         // this.items[index].isfavorite = !this.items[index].isfavorite
         this.items[index].isfavorite = !this.items[index].isfavorite;
         this.items[index].starNum = response.favorite_num;
       });
     },
-    //评论
 
+    //评论
     commentCommit(i) {
+      //调用api中的comment函数，与后端数据库交互，存储评论信息
       commentAPI(
         this.currentAccount,
         this.items[i].photo_id,
@@ -500,10 +517,13 @@ export default {
           this.items[i].commentNum++;
         });
       });
+      //关闭评论窗口
       this.dialog = false;
+      //弹出确认窗口
       this.confirmDialog = true;
     },
 
+    //评论的按钮，用于设置当前评论的图像的索引
     commentBtn(index) {
       this.i = index;
     },
@@ -511,6 +531,7 @@ export default {
     //刷新
     refresh() {
       this.currentAccount = localStorage.getItem("account");
+      //调用api，重新获取各项属性
       getDiscover(this.currentAccount, 5).then(response => {
         console.log(response.data);
         for (this.i = 0; this.i < 5; this.i++) {

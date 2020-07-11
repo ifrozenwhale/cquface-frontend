@@ -9,7 +9,6 @@ import {
   Home,
   UserInfo,
   Welcome,
-  test,
   My,
   OthersMy,
   BasicInfo,
@@ -62,11 +61,7 @@ const router = new Router({
       name: 'index',
       component: Welcome,
     },
-    {
-      path: '/test',
-      name: 'Test',
-      component: test,
-    },
+
     {
       path: '/my',
       name: 'My',

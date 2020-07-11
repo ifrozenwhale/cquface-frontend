@@ -1,13 +1,17 @@
 <template>
   <v-app>
-    <v-container
-      fluid
-      fill-height
-    >
+
+    <v-container>
       <br>
       <br>
       <br>
       <br>
+      <h1 class="white grey--text"> Collections </h1>
+      <v-divider color="grey"></v-divider>
+
+      <v-divider>
+
+      </v-divider>
       <v-row
         v-for="(item, i) in items"
         :key="i"

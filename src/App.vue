@@ -183,7 +183,7 @@ export default {
     dialog: false,
     drawer: true,
     starDialog: false,
-    mini: false,
+    mini: true,
     ok: false,
     items: [
       { name: "1", icon: "mdi-emoticon-outline", text: "开始" },

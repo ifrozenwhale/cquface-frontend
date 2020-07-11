@@ -87,6 +87,6 @@
 
 <script>
 export default {
-  name: 'MyInfo',
-}
+  name: "MyInfo"
+};
 </script>

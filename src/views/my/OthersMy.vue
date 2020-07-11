@@ -1,18 +1,19 @@
+<!-- 访问其他用户的主页 -->
 <template>
   <v-app>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
     <v-divider></v-divider>
-    <br>
+    <br />
     <v-container fluid>
       <v-row
         justify="center"
         dense
       >
-
+        <!-- 各类资料展示 -->
         <v-col
           md="3"
           sm="3"
@@ -39,13 +40,11 @@
 
         <!-- 资料栏 -->
         <v-col
-          md=4
+          md="4"
           offset-md="1"
         >
           <v-app>
-
             <v-list two-line>
-
               <!-- account当前登录用户的账号 -->
               <v-list-item>
                 <v-list-item-icon>
@@ -54,9 +53,8 @@
 
                 <v-list-item-content>
                   <v-list-item-title>Account</v-list-item-title>
-                  <v-list-item-subtitle>{{account}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{ account }}</v-list-item-subtitle>
                 </v-list-item-content>
-
               </v-list-item>
 
               <v-divider inset></v-divider>
@@ -69,9 +67,8 @@
 
                 <v-list-item-content>
                   <v-list-item-title>Nickname</v-list-item-title>
-                  <v-list-item-subtitle>{{nickname}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{ nickname }}</v-list-item-subtitle>
                 </v-list-item-content>
-
               </v-list-item>
 
               <v-divider inset></v-divider>
@@ -84,9 +81,8 @@
 
                 <v-list-item-content>
                   <v-list-item-title>QQ</v-list-item-title>
-                  <v-list-item-subtitle>{{QQ}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{ QQ }}</v-list-item-subtitle>
                 </v-list-item-content>
-
               </v-list-item>
 
               <!-- ‘email’：邮箱（字符串） -->
@@ -98,7 +94,7 @@
                 <v-list-item-content>
                   <v-list-item-title>E-mail</v-list-item-title>
                   <v-list-item-subtitle>
-                    {{email}}
+                    {{ email }}
                     <!-- 此处要改成从后端拿到的邮箱信息 -->
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -112,24 +108,23 @@
 
                 <v-list-item-content>
                   <v-list-item-title>City</v-list-item-title>
-                  <v-list-item-subtitle>{{city}}</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{ city }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
 
               <v-divider inset></v-divider>
             </v-list>
-
           </v-app>
         </v-col>
 
         <v-col md="2">
-
+          <!-- 关注按钮 -->
           <v-btn
             text
             color="grey"
             @click="followClick()"
           >
-            <template v-if="follow==true">
+            <template v-if="follow == true">
               <v-icon color="pink">mdi-account-heart-outline</v-icon>
               <span> Followed </span>
             </template>
@@ -138,15 +133,12 @@
               <v-icon>mdi-account-heart-outline</v-icon>
               <span> Follow </span>
             </template>
-
           </v-btn>
-
         </v-col>
-
       </v-row>
 
       <v-divider color="grey"></v-divider>
-      <br>
+      <br />
 
       <!-- 历史Shared -->
       <div>
@@ -154,7 +146,6 @@
       </div>
 
       <v-row>
-
         <v-container fluid>
           <v-row
             v-for="(item, i) in items"
@@ -169,10 +160,7 @@
                 text
                 v-if="reflesh"
               >
-                <div class="
-            d-flex
-            flex-no-wrap
-            justify-space-between">
+                <div class="d-flex flex-no-wrap justify-space-between">
                   <div>
                     <!--用户名-->
                     <v-card-title
@@ -194,9 +182,8 @@
                   >
                     <v-img :src="item.report_picture"></v-img>
                   </v-avatar>
-
                 </div>
-
+                <!-- 查看详情  -->
                 <v-card-actions>
                   <v-btn
                     dark
@@ -204,12 +191,10 @@
                     @click="showDetail(i)"
                   >查看详情</v-btn>
                 </v-card-actions>
-
               </v-card>
             </v-col>
-
           </v-row>
-          <br>
+          <br />
           <div class="text-center">
             <v-pagination
               v-model="page"
@@ -218,7 +203,6 @@
               @input="reload()"
             ></v-pagination>
           </div>
-
         </v-container>
       </v-row>
       <v-dialog
@@ -227,27 +211,26 @@
       >
         <v-card mx:auto>
           <v-card-title class="headline text-center">
-            {{followTitle}}
+            {{ followTitle }}
           </v-card-title>
 
           <!-- textfiel -->
           <v-card-text>
             <br />
             <!-- add content -->
-            {{followText}}
+            {{ followText }}
           </v-card-text>
 
           <!-- 提交评论的选项 -->
           <v-card-actions>
             <v-spacer></v-spacer>
-
+            <!-- 确认按钮 -->
             <v-btn
               color="light-blue darken-3"
               class="red-text"
               @click="dialog = false"
             >
-              <span class="white--text text--lighten-2">
-                确认</span>
+              <span class="white--text text--lighten-2"> 确认</span>
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -258,12 +241,14 @@
 
 <script>
 import { getOtherInfo, getSharesByAccount, follow } from "../../api/api.js";
+// 从api方法中得到数据
 
 export default {
   name: "OthersMy",
   components: {},
   created() {},
   mounted() {
+    // 打开页面时,加载各类数据
     this.userId = this.$route.query.user_id;
     getOtherInfo(this.userId, localStorage.getItem("account")).then(res => {
       this.account = res.data.account;
@@ -289,6 +274,7 @@ export default {
       });
     });
   },
+  // 各类信息的定义与初始化
   data: () => ({
     items: [],
     total: "1",
@@ -311,15 +297,21 @@ export default {
     follow: false
   }),
   methods: {
+    // 点击关注按钮
     followClick() {
-      this.follow = !this.follow;
-      follow(localStorage.getItem("account"), this.account).then(() => {
+      follow(localStorage.getItem("account"), this.account).then(res => {
         this.dialog = true;
-        if (this.follow) {
+        if (res.data.status == 401) {
+          this.dialog = true;
+          this.followTitle = "关注失败";
+          this.followText = "不能够自己关注自己哦！";
+        } else if (this.follow) {
+          this.follow = !this.follow;
           this.followTitle = "关注成功";
           this.followText = "他已经收到啦！";
         } else {
           this.followTitle = "取消关注";
+          this.follow = !this.follow;
           this.followText = "再去看看别人吧！";
         }
       });
@@ -334,6 +326,7 @@ export default {
         }
       });
     },
+    // 刷新页面
     reload() {
       getSharesByAccount(
         this.account,
