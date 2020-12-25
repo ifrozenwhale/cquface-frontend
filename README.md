@@ -81,4 +81,26 @@
 
 # 界面展示
 
+![Image text](./img/欢迎.png)
+
+![Image text](./img/登录.png)
+
+![Image text](./img/注册.png)
+
+![Image text](./img/check.png)
+
+![Image text](./img/开始页.png)
+
+![Image text](./img/分享.png)
+
+![Image text](./img/照片分析.png)
+
+![Image text](./img/详情.png)
+
+![Image text](./img/历史识别.png)
+
+![Image text](./img/收藏夹.png)
+
 ![Image text](./img/404.png)
+
+
