@@ -87,8 +87,6 @@
 
 ![Image text](./img/注册.png)
 
-![Image text](./img/check.png)
-
 ![Image text](./img/开始页.png)
 
 ![Image text](./img/分享.png)
